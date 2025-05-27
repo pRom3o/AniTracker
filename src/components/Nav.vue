@@ -2,30 +2,36 @@
 <script setup>
 import { ref } from 'vue'
 import { RouterLink } from 'vue-router'
+import Search from './Search.vue'
 
-const pages = ref([
-  { name: 'Home', path: '/' },
-  { name: 'Watchlist', path: '/watchlist' },
-  { name: 'Search', path: '/search' },
-])
+const search = ref(false)
+
+const anisearch = () => {
+  search.value = !search.value
+}
 </script>
 
 <template>
   <div
-    class="max-w-full rounded-full backdrop-blur-md overlay p-2 m-2 flex items-center justify-between fixed left-0 right-0 top-2"
+    class="max-w-full rounded-full backdrop-blur-md overlay p-2 md:m-2 flex items-center justify-between fixed left-1 right-1 top-2"
   >
-    <div class="rounded-full w-[5%] hidden md:flex justify-center">
+    <p class="text-center p-4 rounded-full hover:backdrop-blur-lg hidden md:flex">
       <RouterLink to="/">AW</RouterLink>
-    </div>
-    <div
-      class="md:max-w-[30%] w-[90%] space-x-2 p-2 overlay2 rounded-full flex items-center justify-evenly"
-    >
-      <li
-        v-for="(items, index) in pages"
-        :key="index"
-        class="list-none px-4 py-1 hover:backdrop-blur-lg rounded-2xl"
+    </p>
+    <div class="space-x-2 p-2 overlay rounded-full flex items-center justify-evenly">
+      <li class="md:px-4 md:py-1 hover:backdrop-blur-lg rounded-2xl text-sm md:text-base pl-2">
+        <RouterLink to="/">Home</RouterLink>
+      </li>
+      <button
+        type="text"
+        placeholder="Search anime..."
+        class="px-4 md:py-1 rounded-3xl text-center cursor-pointer border border-[#333333]"
+        @click="anisearch"
       >
-        <RouterLink :to="items.path">{{ items.name }}</RouterLink>
+        Search anime...
+      </button>
+      <li class="md:px-4 py-1 hover:backdrop-blur-lg rounded-2xl text-sm md:text-base pr-2">
+        <RouterLink to="/watchlist">Watchlist</RouterLink>
       </li>
     </div>
     <div class="md:w-[5%] flex justify-center p-2 hover:backdrop-blur-lg rounded-full">
@@ -37,17 +43,23 @@ const pages = ref([
       </svg>
     </div>
   </div>
+  <Search v-if="search" />
 </template>
 
 <style scoped>
+li {
+  list-style: none;
+}
+
 .overlay {
   background-color: rgba(0, 0, 0, 0.2);
 }
-.overlay2 {
+/* .overlay2 {
   background-color: rgba(0, 0, 0, 0.4);
-}
+} */
+
 ::placeholder {
-  color: white;
-  opacity: 0.7;
+  text-align: center;
+  font-size: 14px;
 }
 </style>

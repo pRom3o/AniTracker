@@ -22,11 +22,6 @@ const router = createRouter({
       name: 'Watchlist',
       component: () => import('../views/Watchlist.vue'),
     },
-    {
-      path: '/search',
-      name: 'Search',
-      component: () => import('../views/Search.vue'),
-    },
   ],
 })
 
