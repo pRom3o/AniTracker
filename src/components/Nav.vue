@@ -2,14 +2,14 @@
 <script setup></script>
 
 <template>
-  <div class="bg-[#1e1e1e] p-4">
+  <div class="bg-[#1e1e1e] w-full">
     <div
-      class="h-16 max-w-full border border-[#1e1e1e] rounded-full bg-[#222222] p-3 flex items-center justify-between"
+      class="max-w-full border border-[#1e1e1e] rounded-full bg-[#222222] p-2 flex items-center justify-between space-x-3"
     >
-      <div class="p-4 rounded-full backdrop-blur-xl w-[5%] md:flex justify-center">
+      <div class="max-w-full rounded-full backdrop-blur-xl w-[5%] md:flex justify-center">
         <h1 class="text-xl text-white">AW</h1>
       </div>
-      <div class="min-w-[90%] p-1 space-x-2 border border-white rounded-full flex items-center">
+      <div class="min-w-[80%] p-1 space-x-2 border border-white rounded-full flex items-center">
         <input
           type="text"
           class="w-full px-4 py-1 text-white rounded-l-full border-none ring-0 focus:border focus:ring1 placeholder-white"
