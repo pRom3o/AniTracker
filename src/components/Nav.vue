@@ -4,10 +4,10 @@ import { ref } from 'vue'
 import { RouterLink } from 'vue-router'
 import Search from './Search.vue'
 
-const search = ref(false)
+const searchbar = ref(false)
 
 const anisearch = () => {
-  search.value = !search.value
+  searchbar.value = !searchbar.value
 }
 </script>
 
@@ -43,7 +43,9 @@ const anisearch = () => {
       </svg>
     </div>
   </div>
-  <Search v-if="search" />
+  <Transition name="search">
+    <Search v-if="searchbar" />
+  </Transition>
 </template>
 
 <style scoped>
@@ -61,5 +63,19 @@ li {
 ::placeholder {
   text-align: center;
   font-size: 14px;
+}
+
+.search-enter-from,
+.search-leave-to {
+  opacity: 0;
+  transform: scale(0.5);
+  transform: translateY(-30px);
+}
+
+.search-enter-active,
+.search-leave-active {
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
 }
 </style>
