@@ -37,9 +37,9 @@ async function fetchanime() {
 </script>
 
 <template>
-  <div class="w-full h-full flex justify-center" v-show="searchbar">
+  <div class="w-full h-full flex justify-center px-4" v-show="searchbar">
     <div
-      class="md:mt-40 mt-30 mb-20 md:w-[40%] md:h-[40%] h-[50%] bg-[#1f1f1f] rounded-4xl flex flex-col items-center justify-between p-6"
+      class="md:mt-40 mt-30 mb-20 md:w-[30%] md:h-[50%] h-[70%] bg-[#181818] rounded-4xl flex flex-col items-center justify-between p-6"
     >
       <div class="flex w-full space-x-2 py-4 mb-4 h-[15%] items-center">
         <p
@@ -58,8 +58,18 @@ async function fetchanime() {
             />
           </svg>
         </p>
-        <div class="h-full w-full flex items-center p-5 border rounded-full">
-          <p class="p-2" @click="fetchanime()">
+        <div class="h-full w-full flex items-center py-6 px-3 border rounded-full">
+          <input
+            type="text"
+            placeholder="Search animes..."
+            v-model="animename"
+            @keyup.enter="fetchanime()"
+            class="w-full p-2 rounded-full outline-0 focus:outline-0"
+          />
+          <p
+            class="p-2 cursor-pointer rounded-full hover:bg-[#303030] hover:backdrop-blur-lg"
+            @click="fetchanime()"
+          >
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24">
               <path
                 fill="none"
@@ -72,13 +82,6 @@ async function fetchanime() {
               />
             </svg>
           </p>
-          <input
-            type="text"
-            placeholder="Search animes..."
-            v-model="animename"
-            @keyup.enter="fetchanime()"
-            class="w-full p-2 rounded-full outline-0 focus:outline-0"
-          />
         </div>
       </div>
       <div
@@ -101,12 +104,44 @@ async function fetchanime() {
         <p class="">No results found for ""</p>
       </div>
       <div
-        class="min-h-[85%] w-full flex flex-col items-center justify-center text-gray-400"
+        class="h-[85%] w-full space-y-3 flex flex-col items-center text-gray-400 overflow-y-auto scroll-hidden"
         v-else
       >
-        <li v-for="anime in animeresult" :key="anime.mal_id">
-          <a>{{ anime.url }}</a>
-        </li>
+        <div
+          class="w-full max-h-[35%] p-3 flex items-center md:space-x-0 space-x-3 text-white border-b border-[#333333]"
+          v-for="anime in animeresult"
+          :key="anime.mal_id"
+        >
+          <div class="w-[20%] h-full">
+            <img :src="anime.images.jpg.image_url" :alt="anime.title[0]" class="h-full" />
+          </div>
+          <div
+            class="w-[70%] max-h-full flex flex-col items-start text-start space-y-1 overflow-y-auto scroll-hidden"
+          >
+            <h2 class="font-bold">{{ anime.title_english }}</h2>
+            <p class="text-xs">Episodes - {{ anime.episodes }}</p>
+            <p class="text-xs flex items-center">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="12"
+                height="12"
+                viewBox="0 0 24 24"
+                class="mr-1"
+              >
+                <path
+                  fill="none"
+                  stroke="#fff"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="1.5"
+                  d="m13.728 3.444l1.76 3.549c.24.494.88.968 1.42 1.058l3.189.535c2.04.343 2.52 1.835 1.05 3.307l-2.48 2.5c-.42.423-.65 1.24-.52 1.825l.71 3.095c.56 2.45-.73 3.397-2.88 2.117l-2.99-1.785c-.54-.322-1.43-.322-1.98 0L8.019 21.43c-2.14 1.28-3.44.322-2.88-2.117l.71-3.095c.13-.585-.1-1.402-.52-1.825l-2.48-2.5C1.39 10.42 1.86 8.929 3.899 8.586l3.19-.535c.53-.09 1.17-.564 1.41-1.058l1.76-3.549c.96-1.925 2.52-1.925 3.47 0"
+                  color="#fff"
+                />
+              </svg>
+              {{ anime.score }} - {{ anime.type }} - {{ anime.year }} - {{ anime.status }}
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -115,5 +150,9 @@ async function fetchanime() {
 <style scoped>
 ::placeholder {
   padding-left: 2rem;
+}
+
+.scroll-hidden::-webkit-scrollbar {
+  display: none;
 }
 </style>
