@@ -41,6 +41,16 @@ async function fetchanime() {
     }
   }, 500)
 }
+
+const addToWatchlist = (anime) => {
+  // create new watchlist or retrieve existing watchlist
+  const watchlist = JSON.parse(localStorage.getItem('watchlist')) || []
+  // add new anime to watchlist
+  watchlist.push(anime)
+  // convert array to string for JSON
+  localStorage.setItem('watchlist', JSON.stringify(watchlist))
+  console.log(watchlist)
+}
 </script>
 
 <template>
@@ -191,7 +201,10 @@ async function fetchanime() {
                 </svg>
                 {{ anime.score }} - {{ anime.type }} - {{ anime.year }} - {{ anime.status }}
               </p>
-              <button class="flex flex-col items-center cursor-pointer">
+              <button
+                class="flex flex-col items-center cursor-pointer"
+                @click="addToWatchlist(anime)"
+              >
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24">
                   <path
                     fill="#fff"
