@@ -14,6 +14,7 @@ const animename = ref('')
 const animeresult = ref([])
 // create a variable for loading state
 const loading = ref(false)
+const watchlist = ref([])
 // function to fetch  data from API
 async function fetchanime() {
   // loading state
@@ -31,8 +32,6 @@ async function fetchanime() {
       const data = await response.json()
       // store data in ref array
       animeresult.value = data.data
-      // log to console to check value
-      console.log(animeresult.value)
     } catch (error) {
       // Handle any errors if the request fails
       console.error('Error fetching anime:', error)
@@ -43,20 +42,25 @@ async function fetchanime() {
 }
 
 const addToWatchlist = (anime) => {
-  // create new watchlist or retrieve existing watchlist
-  const watchlist = JSON.parse(localStorage.getItem('watchlist')) || []
-  // add new anime to watchlist
-  watchlist.push(anime)
+  // retrieve existing watchlist, if no watchlist create new
+  watchlist.value = JSON.parse(localStorage.getItem('watchlist')) || []
+
+  // add new anime to watchlist and avoid duplicates
+  if (!watchlist.value.some((item) => item.title_english === anime.title_english)) {
+    watchlist.value.push(anime)
+  }
   // convert array to string for JSON
-  localStorage.setItem('watchlist', JSON.stringify(watchlist))
-  console.log(watchlist)
+  localStorage.setItem('watchlist', JSON.stringify(watchlist.value))
+  console.log('Added to', watchlist)
 }
+
+// onMounted(localStorage.clear())
 </script>
 
 <template>
-  <div class="w-full h-full flex justify-center px-4 backdrop-blur-xs" v-show="searchbar">
+  <div class="w-full h-full flex justify-center px-4 backdrop-blur-xs fixed" v-show="searchbar">
     <div
-      class="md:mt-40 mt-30 mb-20 md:w-[30%] md:h-[50%] h-[70%] bg-[#181818] rounded-4xl flex flex-col items-center justify-between p-6"
+      class="md:mt-40 mt-30 mb-20 md:w-[70%] lg:w-[40%] md:h-[50%] h-[70%] bg-[#181818] rounded-4xl flex flex-col items-center justify-between p-6"
     >
       <div class="flex w-full space-x-2 py-4 mb-4 h-[15%] items-center">
         <p
@@ -173,7 +177,7 @@ const addToWatchlist = (anime) => {
           v-else
         >
           <div class="w-[20%] h-full">
-            <img :src="anime.images.jpg.image_url" :alt="anime.title[0]" class="h-full" />
+            <img :src="anime.images.jpg.image_url" alt="#" class="h-full" />
           </div>
           <div
             class="w-[70%] max-h-full flex flex-col items-start text-start space-y-1 overflow-y-auto scroll-hidden"
