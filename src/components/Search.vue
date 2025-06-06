@@ -1,6 +1,7 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <script setup>
 import { ref } from 'vue'
+import { addToWatchlist } from '../state/watchlistStates'
 
 const searchbar = ref(true)
 
@@ -14,7 +15,6 @@ const animename = ref('')
 const animeresult = ref([])
 // create a variable for loading state
 const loading = ref(false)
-const watchlist = ref([])
 // function to fetch  data from API
 async function fetchanime() {
   // loading state
@@ -32,6 +32,7 @@ async function fetchanime() {
       const data = await response.json()
       // store data in ref array
       animeresult.value = data.data
+      console.log(animeresult.value)
     } catch (error) {
       // Handle any errors if the request fails
       console.error('Error fetching anime:', error)
@@ -39,19 +40,6 @@ async function fetchanime() {
       loading.value = false
     }
   }, 500)
-}
-
-const addToWatchlist = (anime) => {
-  // retrieve existing watchlist, if no watchlist create new
-  watchlist.value = JSON.parse(localStorage.getItem('watchlist')) || []
-
-  // add new anime to watchlist and avoid duplicates
-  if (!watchlist.value.some((item) => item.title_english === anime.title_english)) {
-    watchlist.value.push(anime)
-  }
-  // convert array to string for JSON
-  localStorage.setItem('watchlist', JSON.stringify(watchlist.value))
-  console.log('Added to', watchlist)
 }
 
 // onMounted(localStorage.clear())
