@@ -1,6 +1,5 @@
 <script setup>
 import Nav from '@/components/Nav.vue'
-import Footer from '@/components/Footer.vue'
 </script>
 
 <template>
@@ -10,6 +9,5 @@ import Footer from '@/components/Footer.vue'
   >
     <Nav />
     <div class="h-full w-full"></div>
-    <Footer class="h-[10%] w-full" />
   </div>
 </template>

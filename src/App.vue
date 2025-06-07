@@ -1,9 +1,9 @@
 <script setup>
 import { RouterView } from 'vue-router'
-import Footer from '@/components/Footer.vue'
+// import Footer from '@/components/Footer.vue'
 </script>
 
 <template>
   <RouterView />
-  <Footer />
+  <!-- <Footer /> -->
 </template>
