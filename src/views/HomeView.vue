@@ -1,5 +1,5 @@
 <script setup>
-import Nav from '@/components/Nav.vue'
+// import Nav from '@/components/Nav.vue'
 </script>
 
 <template>
@@ -7,7 +7,7 @@ import Nav from '@/components/Nav.vue'
     class="h-screen w-full text-center text-gray-100 bg-cover bg-center"
     style="background-image: url('/images/landscape2.jpg')"
   >
-    <Nav />
+    <!-- <Nav /> -->
     <div class="h-full w-full"></div>
   </div>
 </template>

@@ -13,7 +13,7 @@ const anisearch = () => {
 
 <template>
   <div
-    class="max-w-full rounded-full backdrop-blur-md overlay p-2 md:m-2 flex items-center justify-between fixed left-1 right-1 top-2"
+    class="max-w-full rounded-full backdrop-blur-md overlay p-2 md:m-2 flex items-center justify-between fixed left-1 right-1 top-2 text-gray-300"
   >
     <p class="text-center p-4 rounded-full hover:backdrop-blur-lg hidden md:flex">
       <RouterLink to="/">AW</RouterLink>

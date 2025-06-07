@@ -2,7 +2,7 @@
 <script setup></script>
 
 <template>
-  <div class="h-32 w-full bg-[#262626] flex items-center justify-center p-3">
+  <div class="h-32 w-full bg-[#262626] flex items-center justify-center p-3 text-gray-300">
     <div
       class="w-full h-full border border-black flex-col md:flex-row flex md:items-center justify-between"
     >

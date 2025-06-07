@@ -48,7 +48,7 @@ async function fetchanime() {
 <template>
   <div class="w-full h-full flex justify-center px-4 backdrop-blur-xs fixed" v-show="searchbar">
     <div
-      class="md:mt-40 mt-30 mb-20 md:w-[70%] lg:w-[40%] md:h-[50%] h-[70%] bg-[#181818] rounded-4xl flex flex-col items-center justify-between p-6"
+      class="md:mt-40 mt-30 mb-20 md:w-[70%] lg:w-[40%] md:h-[50%] h-[70%] bg-[#181818] rounded-4xl flex flex-col items-center justify-between p-6 text-gray-300"
     >
       <div class="flex w-full space-x-2 py-4 mb-4 h-[15%] items-center">
         <p
