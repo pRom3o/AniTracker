@@ -1,7 +1,7 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <script setup>
 import { ref } from 'vue'
-import { addToWatchlist } from '../state/watchlistStates'
+import { addToWatchlist, isOpen, selectcategory, categories } from '../state/watchlistStates'
 
 const searchbar = ref(true)
 
@@ -42,13 +42,16 @@ async function fetchanime() {
   }, 500)
 }
 
-// onMounted(localStorage.clear())
+//onMounted onMounted(localStorage.clear())
 </script>
 
 <template>
-  <div class="w-full h-full flex justify-center px-4 backdrop-blur-xs fixed" v-show="searchbar">
+  <div
+    class="w-full h-full flex justify-center px-4 backdrop-blur-md bg-black/30 fixed z-30"
+    v-show="searchbar"
+  >
     <div
-      class="md:mt-40 mt-30 mb-20 md:w-[70%] lg:w-[40%] md:h-[50%] h-[70%] bg-[#181818] rounded-4xl flex flex-col items-center justify-between p-6 text-gray-300"
+      class="md:mt-62 mt-30 mb-20 md:w-[70%] lg:w-[40%] md:h-[50%] h-[70%] cards rounded-4xl flex flex-col items-center justify-between p-6 text-gray-300"
     >
       <div class="flex w-full space-x-2 py-4 mb-4 h-[15%] items-center">
         <p
@@ -165,12 +168,18 @@ async function fetchanime() {
           v-else
         >
           <div class="w-[20%] h-full">
-            <img :src="anime.images.jpg.image_url" alt="#" class="h-full" />
+            <img :src="anime.images.jpg.image_url" alt="#" class="h-full aspect-3/3" />
           </div>
           <div
             class="w-[70%] max-h-full flex flex-col items-start text-start space-y-1 overflow-y-auto scroll-hidden"
           >
-            <h2 class="font-bold text-sm md:text-base">{{ anime.title_english }}</h2>
+            <h2 class="font-bold text-sm md:text-base">
+              {{
+                anime.title_english && anime.title_english.length > 30
+                  ? anime.title_english.slice(0, 30) + '...'
+                  : anime.title_english || 'No title available'
+              }}
+            </h2>
             <p class="text-xs">Episodes - {{ anime.episodes }}</p>
             <div class="text-xs w-full flex items-center justify-between">
               <p class="flex">
@@ -209,11 +218,32 @@ async function fetchanime() {
           </div>
         </div>
       </div>
+      <div
+        v-if="isOpen"
+        class="fixed inset-0 bg-black/40 bg-opacity-90 flex items-center justify-center z-50"
+      >
+        <div
+          class="min-h-52 w-96 rounded-lg bg-[#282828] flex flex-col items-center justify-between py-5 px-3"
+        >
+          <button
+            v-for="category in categories"
+            :key="category"
+            class="w-full text-white/70 hover:bg-black/20 bg-[#2f2f2f] py-6 rounded-2xl m-2"
+            @click="selectcategory(category)"
+          >
+            {{ category }}
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <style scoped>
+.cards {
+  background: rgba(255, 255, 255, 0.05);
+}
+
 ::placeholder {
   padding-left: 2rem;
 }

@@ -13,7 +13,7 @@ const anisearch = () => {
 
 <template>
   <div
-    class="max-w-full rounded-full backdrop-blur-md overlay p-2 md:m-2 flex items-center justify-between fixed left-1 right-1 top-2 text-gray-300"
+    class="max-w-full rounded-full backdrop-blur-md overlay p-2 md:m-2 flex items-center justify-between fixed left-1 right-1 top-2 z-2 text-gray-300"
   >
     <p class="text-center p-4 rounded-full hover:backdrop-blur-lg hidden md:flex">
       <RouterLink to="/">AW</RouterLink>
@@ -54,7 +54,7 @@ li {
 }
 
 .overlay {
-  background-color: rgba(0, 0, 0, 0.2);
+  background: linear-gradient(135deg, #0a0e27 0%, #1a1d3a 50%, #2d1b4e 100%);
 }
 /* .overlay2 {
   background-color: rgba(0, 0, 0, 0.4);
