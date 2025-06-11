@@ -13,7 +13,7 @@ import { watchlist, removeFromWatchlist } from '../state/watchlistStates'
 <template>
   <div class="min-h-screen w-full text-white/80 text-center flex flex-col body">
     <Nav />
-    <div class="p-6 flex-1">
+    <div class="p-6 flex-1 mt-5">
       <div
         v-if="Object.values(watchlist).every((category) => category.length === 0)"
         class="flex items-center justify-center h-[100vh]"
@@ -21,7 +21,7 @@ import { watchlist, removeFromWatchlist } from '../state/watchlistStates'
         <h1 class="text-4xl header"><i>Nothing in your watchlist...</i></h1>
       </div>
       <div v-else class="">
-        <h2 class="text-center md:text-3xl font-bold text-xl md:mt-30 md:mb-5 m-14">
+        <h2 class="text-center md:text-3xl font-bold text-3xl md:mt-30 md:mb-5 m-14">
           My watchlist
         </h2>
         <div class="flex flex-col justify-evenly md:p-6">
@@ -30,7 +30,7 @@ import { watchlist, removeFromWatchlist } from '../state/watchlistStates'
             :key="category"
             class="flex flex-col w-full text-xs md:text-base"
           >
-            <h2 class="text-5xl font-bold header">{{ category }}</h2>
+            <h2 class="md:text-5xl text-3xl font-bold header">{{ category }}</h2>
 
             <div class="flex items-center justify-center">
               <div
