@@ -16,7 +16,7 @@ const anisearch = () => {
     class="max-w-full rounded-full backdrop-blur-md overlay p-2 md:m-2 flex items-center justify-between fixed left-1 right-1 top-2 z-2 text-gray-300"
   >
     <p class="text-center p-4 rounded-full hover:backdrop-blur-lg hidden md:flex">
-      <RouterLink to="/">AW</RouterLink>
+      <RouterLink to="/" class="logo">AniTracker</RouterLink>
     </p>
     <div class="space-x-2 p-2 overlay rounded-full flex items-center justify-evenly">
       <li class="md:px-4 md:py-1 hover:backdrop-blur-lg rounded-2xl text-sm md:text-base pl-2">
@@ -77,5 +77,14 @@ li {
   transition:
     opacity 0.3s ease,
     transform 0.3s ease;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 </style>

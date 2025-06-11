@@ -218,17 +218,14 @@ async function fetchanime() {
           </div>
         </div>
       </div>
-      <div
-        v-if="isOpen"
-        class="fixed inset-0 bg-black/40 bg-opacity-90 flex items-center justify-center z-50"
-      >
+      <div v-if="isOpen" class="fixed inset-0 flex items-center justify-center z-50">
         <div
-          class="min-h-52 w-96 rounded-lg bg-[#282828] flex flex-col items-center justify-between py-5 px-3"
+          class="min-h-52 w-96 rounded-lg cards flex flex-col items-center justify-between py-5 px-3"
         >
           <button
             v-for="category in categories"
             :key="category"
-            class="w-full text-white/70 hover:bg-black/20 bg-[#2f2f2f] py-6 rounded-2xl m-2"
+            class="w-full text-white/70 bg-[#5a5a5a] py-6 rounded-2xl m-2"
             @click="selectcategory(category)"
           >
             {{ category }}
@@ -240,6 +237,11 @@ async function fetchanime() {
 </template>
 
 <style scoped>
+.background {
+  background: linear-gradient(-45deg, #1a1a2e, #16213e, #0f3460, #1a1a2e);
+  background-size: 400% 400%;
+  animation: gradientShift 15s ease infinite;
+}
 .cards {
   background: rgba(255, 255, 255, 0.05);
 }
