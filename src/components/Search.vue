@@ -1,7 +1,13 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <script setup>
 import { ref } from 'vue'
-import { addToWatchlist, isOpen, selectcategory, categories } from '../state/watchlistStates'
+import {
+  addToWatchlist,
+  isOpen,
+  selectcategory,
+  categories,
+  watchlist,
+} from '../state/watchlistStates'
 
 const searchbar = ref(true)
 
@@ -51,7 +57,7 @@ async function fetchanime() {
     v-show="searchbar"
   >
     <div
-      class="md:mt-62 mt-30 mb-20 md:w-[70%] lg:w-[40%] md:h-[50%] h-[70%] cards rounded-4xl flex flex-col items-center justify-between p-6 text-gray-300"
+      class="lg:mt-62 md:mt-20 mt-30 mb-20 md:w-[70%] lg:w-[40%] lg:h-[50%] h-[70%] cards rounded-4xl flex flex-col items-center justify-between p-6 text-gray-300"
     >
       <div class="flex w-full space-x-2 py-4 mb-4 h-[15%] items-center">
         <p
@@ -113,7 +119,7 @@ async function fetchanime() {
             />
           </svg>
         </p>
-        <p class="">No results found for ""</p>
+        <p class="text-white">No results found for ""</p>
       </div>
       <div
         class="h-[85%] w-full space-y-3 flex flex-col items-center text-gray-400 overflow-y-auto scroll-hidden"
@@ -218,18 +224,22 @@ async function fetchanime() {
           </div>
         </div>
       </div>
-      <div v-if="isOpen" class="fixed inset-0 flex items-center justify-center z-50">
-        <div
-          class="min-h-52 w-96 rounded-lg cards flex flex-col items-center justify-between py-5 px-3"
-        >
-          <button
-            v-for="category in categories"
-            :key="category"
-            class="w-full text-white/70 bg-[#5a5a5a] py-6 rounded-2xl m-2"
-            @click="selectcategory(category)"
+    </div>
+    <div v-if="isOpen" class="flex items-center justify-center fixed inset-0 z-50 bg-black/30">
+      <div class="backdrop-blur-3xl h-full w-full flex items-center justify-center">
+        <div class="h-full w-full bg-black/10 flex items-center justify-center">
+          <div
+            class="min-h-64 w-96 cards-1 backdrop-blur-3xl flex flex-col items-center justify-center p-4 rounded-2xl"
           >
-            {{ category }}
-          </button>
+            <button
+              v-for="category in categories"
+              :key="category"
+              class="w-full text-white/70 text py-6 rounded-2xl m-2 btn"
+              @click="selectcategory(category)"
+            >
+              {{ category }}
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -242,8 +252,17 @@ async function fetchanime() {
   background-size: 400% 400%;
   animation: gradientShift 15s ease infinite;
 }
+.btn {
+  border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.cards-1 {
+  background: rgba(255, 255, 255, 0.3);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+}
 .cards {
   background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 ::placeholder {

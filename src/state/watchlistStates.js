@@ -32,6 +32,7 @@ export const selectcategory = (category) => {
   // add new anime to watchlist and avoid duplicates
   if (!exists) {
     watchlist[category].push(selectedAnime.value)
+    console.log(selectedAnime.value)
     // convert array to string for JSON
     localStorage.setItem('watchlist', JSON.stringify(watchlist))
     // isOpen.value = false
@@ -40,9 +41,7 @@ export const selectcategory = (category) => {
   }
 }
 export const removeFromWatchlist = (anime, category) => {
-  watchlist[category] = watchlist[category].filter(
-    (item) => item.title_english !== anime.title_english,
-  )
+  watchlist[category] = watchlist[category].filter((item) => item.mal_id !== anime.mal_id)
   localStorage.setItem('watchlist', JSON.stringify(watchlist))
 }
 

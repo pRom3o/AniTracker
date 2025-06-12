@@ -17,6 +17,7 @@ import Nav from '@/components/Nav.vue'
           designed for true anime enthusiasts🎨✨📊.
         </p>
       </header>
+
       <section class="w-full flex items-center justify-center">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-12">
           <!-- Recommendations card -->
@@ -34,7 +35,9 @@ import Nav from '@/components/Nav.vue'
               </p>
             </div>
           </div>
+
           <!-- Track card -->
+
           <div
             class="md:w-[300px] w-full px-6 md:py-20 py-10 transition-transform duration-500 ease-in-out transform hover:-translate-y-3 cards rounded-3xl"
           >
@@ -49,6 +52,7 @@ import Nav from '@/components/Nav.vue'
               </p>
             </div>
           </div>
+
           <!-- Customize card -->
           <div
             class="md:w-[300px] w-full px-6 md:py-20 py-10 transition-transform duration-500 ease-in-out transform hover:-translate-y-3 cards rounded-3xl"
