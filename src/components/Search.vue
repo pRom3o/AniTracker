@@ -1,13 +1,7 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <script setup>
 import { ref } from 'vue'
-import {
-  addToWatchlist,
-  isOpen,
-  selectcategory,
-  categories,
-  watchlist,
-} from '../state/watchlistStates'
+import { addToWatchlist, isOpen, selectcategory, categories } from '../state/watchlistStates'
 
 const searchbar = ref(true)
 
