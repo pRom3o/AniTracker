@@ -33,7 +33,7 @@ import { watchlist, removeFromWatchlist } from '../state/watchlistStates'
                   :key="index"
                   class="p-3 background rounded-2xl shadow-2xl md:p-3 transition-transform duration-500 ease-in-out transform md:hover:scale-102"
                 >
-                  <div class="flex flex-col h-full justify-between leave enter">
+                  <div class="flex flex-col h-full justify-between">
                     <!-- image source -->
                     <img
                       :src="anime.images.jpg.image_url"

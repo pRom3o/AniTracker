@@ -1,14 +1,9 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <script setup>
-import { ref } from 'vue'
+// import { ref } from 'vue'
 import { RouterLink } from 'vue-router'
 import Search from './Search.vue'
-
-const searchbar = ref(false)
-
-const anisearch = () => {
-  searchbar.value = !searchbar.value
-}
+import { searchbar, anisearch } from '../state/watchlistStates'
 </script>
 
 <template>
@@ -24,11 +19,23 @@ const anisearch = () => {
       </li>
       <button
         type="text"
-        placeholder="Search anime..."
-        class="px-4 md:py-1 rounded-3xl text-center cursor-pointer border border-[#333333]"
+        class="px-4 py-2 rounded-3xl text-center flex items-center cursor-pointer border border-[#333333]"
         @click="anisearch"
       >
-        Search anime...
+        Search
+        <p class="ml-1">
+          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24 ">
+            <path
+              fill="none"
+              stroke="#fff"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="1.5"
+              d="M17.5 17.5L22 22m-2-11a9 9 0 0 1-17.064 4M2 11a9 9 0 0 1 17.065-4m0 0V2m0 5H14.5M2.936 15v5m0-5H7.5"
+              color="#fff"
+            />
+          </svg>
+        </p>
       </button>
       <li class="md:px-4 py-1 hover:backdrop-blur-lg rounded-2xl text-sm md:text-base pr-2">
         <RouterLink to="/watchlist">Watchlist</RouterLink>
@@ -44,7 +51,7 @@ const anisearch = () => {
     </div>
   </div>
   <Transition name="search">
-    <Search v-if="searchbar" />
+    <Search v-if="searchbar" class="z-50" />
   </Transition>
 </template>
 

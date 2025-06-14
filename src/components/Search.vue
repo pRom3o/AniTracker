@@ -1,13 +1,16 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <script setup>
+import debounce from 'lodash.debounce'
 import { ref } from 'vue'
-import { addToWatchlist, isOpen, selectcategory, categories } from '../state/watchlistStates'
-
-const searchbar = ref(true)
-
-const anisearch = () => {
-  searchbar.value = !searchbar.value
-}
+import {
+  addToWatchlist,
+  isOpen,
+  selectcategory,
+  categories,
+  searchbar,
+  anisearch,
+  mode,
+} from '../state/watchlistStates'
 
 const animename = ref('')
 
@@ -16,46 +19,45 @@ const animeresult = ref([])
 // create a variable for loading state
 const loading = ref(false)
 // function to fetch  data from API
-async function fetchanime() {
+const debounced = debounce(async function fetchanime() {
   // loading state
   loading.value = true
   // setTimeout for loading screen
-  setTimeout(async () => {
-    // fetch anime info from jinka API
-    try {
-      const response = await fetch(`https://api.jikan.moe/v4/anime?q=${animename.value}`)
-      // to check if request was successful
-      if (!response.ok) {
-        throw new Error('Unsuccessful, Try again')
-      }
-      // convert response to json format and store
-      const data = await response.json()
-      // store data in ref array
-      animeresult.value = data.data
-      console.log(animeresult.value)
-    } catch (error) {
-      // Handle any errors if the request fails
-      console.error('Error fetching anime:', error)
-    } finally {
-      loading.value = false
+
+  // fetch anime info from jinka API
+  try {
+    const response = await fetch(`https://api.jikan.moe/v4/anime?q=${animename.value}`)
+    // to check if request was successful
+    if (!response.ok) {
+      throw new Error('Unsuccessful, Try again')
     }
-  }, 500)
-}
+    // convert response to json format and store
+    const data = await response.json()
+    // store data in ref array
+    animeresult.value = data.data
+    console.log(animeresult.value)
+  } catch (error) {
+    // Handle any errors if the request fails
+    console.error('Error fetching anime:', error)
+  } finally {
+    loading.value = false
+  }
+}, 300)
 
 //onMounted onMounted(localStorage.clear())
 </script>
 
 <template>
   <div
-    class="w-full h-full flex justify-center px-4 backdrop-blur-md bg-black/30 fixed z-30"
+    class="w-full h-full flex justify-center md:px-4 backdrop-blur-md bg-black/30 fixed"
     v-show="searchbar"
   >
     <div
-      class="lg:mt-62 md:mt-20 mt-30 mb-20 md:w-[70%] lg:w-[40%] lg:h-[50%] h-[70%] cards rounded-4xl flex flex-col items-center justify-between p-6 text-gray-300"
+      class="lg:mt-62 md:mt-20 h-full w-full md:w-[70%] lg:w-[40%] lg:h-[50%] cards md:rounded-4xl flex flex-col items-center justify-between p-6 text-gray-300"
     >
-      <div class="flex w-full space-x-2 py-4 mb-4 h-[15%] items-center">
-        <p
-          class="cursor-pointer p-3 rounded-full hover:bg-[#303030] hover:border hover:border-[#333333]"
+      <div class="flex w-full space-x-2 md:py-4 mb-4 md:h-[15%] items-center">
+        <button
+          class="cursor-pointer p-3 rounded-full hover:bg-white/10 hover:border hover:border-[#333333]"
           @click="anisearch"
         >
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
@@ -69,31 +71,35 @@ async function fetchanime() {
               color="#fff"
             />
           </svg>
-        </p>
-        <div class="h-full w-full flex items-center py-6 px-3 border rounded-full">
+        </button>
+        <div class="w-full flex items-center md:py-2 px-3 border rounded-full">
           <input
             type="text"
             placeholder="Search animes..."
             v-model="animename"
             @keyup.enter="fetchanime()"
+            @input="debounced"
             class="w-full p-2 rounded-full outline-0 focus:outline-0"
           />
-          <p
-            class="p-2 cursor-pointer rounded-full hover:bg-[#303030] hover:backdrop-blur-lg"
+          <button
+            class="p-3 cursor-pointer rounded-full md:text-xl hover:bg-white/10 hover:text-white flex items-center justify-center"
             @click="fetchanime()"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24">
-              <path
-                fill="none"
-                stroke="#fff"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="1.5"
-                d="M17.5 17.5L22 22m-2-11a9 9 0 0 1-17.064 4M2 11a9 9 0 0 1 17.065-4m0 0V2m0 5H14.5M2.936 15v5m0-5H7.5"
-                color="#fff"
-              />
-            </svg>
-          </p>
+            search
+            <p class="mx-2 hidden md:flex">
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24 ">
+                <path
+                  fill="none"
+                  stroke="#fff"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="1.5"
+                  d="M17.5 17.5L22 22m-2-11a9 9 0 0 1-17.064 4M2 11a9 9 0 0 1 17.065-4m0 0V2m0 5H14.5M2.936 15v5m0-5H7.5"
+                  color="#fff"
+                />
+              </svg>
+            </p>
+          </button>
         </div>
       </div>
       <div
@@ -116,7 +122,7 @@ async function fetchanime() {
         <p class="text-white">No results found for ""</p>
       </div>
       <div
-        class="h-[85%] w-full space-y-3 flex flex-col items-center text-gray-400 overflow-y-auto scroll-hidden"
+        class="md:h-[85%] h-full w-full space-y-3 flex flex-col items-center text-gray-400 overflow-y-auto scroll-hidden"
         v-else
       >
         <div class="h-full w-full flex items-center justify-center" v-if="loading">
@@ -162,13 +168,13 @@ async function fetchanime() {
           </p>
         </div>
         <div
-          class="w-full max-h-[35%] py-2 flex items-center md:space-x-0 space-x-3 text-white border-b border-[#333333]"
+          class="w-full max-h-[35%] py-2 flex items-center justify-evenly md:space-x-0 space-x-3 text-white border-b border-[#333333]"
           v-for="anime in animeresult"
           :key="anime.mal_id"
           v-else
         >
           <div class="w-[20%] h-full">
-            <img :src="anime.images.jpg.image_url" alt="#" class="h-full aspect-3/3" />
+            <img :src="anime.images.jpg.image_url" alt="#" class="md:h-full aspect-3/3" />
           </div>
           <div
             class="w-[70%] max-h-full flex flex-col items-start text-start space-y-1 overflow-y-auto scroll-hidden"
@@ -203,7 +209,7 @@ async function fetchanime() {
                 {{ anime.score }} - {{ anime.type }} - {{ anime.year }} - {{ anime.status }}
               </p>
               <button
-                class="flex flex-col items-center cursor-pointer"
+                class="hidden md:flex items-center cursor-pointer"
                 @click="addToWatchlist(anime)"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24">
@@ -214,33 +220,65 @@ async function fetchanime() {
                 </svg>
                 Add to watchlist
               </button>
+              <button
+                class="md:hidden flex items-center cursor-pointer mx-2"
+                @click="addToWatchlist(anime)"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24">
+                  <path
+                    fill="#fff"
+                    d="m11 19.654l-1.156-1.042q-2.28-2.087-3.799-3.593T3.632 12.34q-.896-1.173-1.264-2.146T2 8.225q0-1.908 1.296-3.201T6.5 3.731q1.32 0 2.475.675T11 6.369q.87-1.288 2.025-1.963T15.5 3.73q1.737 0 2.948 1.08q1.212 1.08 1.48 2.689H18.9q-.238-1.23-1.19-2t-2.21-.77q-1.217 0-2.21.688T11.403 7.5h-.804q-.91-1.413-1.907-2.091T6.5 4.73q-1.463 0-2.482.997Q3 6.725 3 8.225q0 .844.35 1.714t1.25 2t2.45 2.658T11 18.3q.766-.69 1.506-1.364q.74-.672 1.323-1.23l.11.11l.246.247l.248.247l.11.11q-.59.557-1.314 1.208t-1.471 1.341zm6.73-3.154v-3h-3v-1h3v-3h1v3h3v1h-3v3z"
+                  />
+                </svg>
+                Add
+              </button>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <div v-if="isOpen" class="flex items-center justify-center fixed inset-0 z-50 bg-black/30">
-      <div class="backdrop-blur-3xl h-full w-full flex items-center justify-center">
-        <div class="h-full w-full bg-black/10 flex items-center justify-center">
-          <div
-            class="min-h-64 w-96 cards-1 backdrop-blur-3xl flex flex-col items-center justify-center p-4 rounded-2xl"
-          >
-            <button
-              v-for="category in categories"
-              :key="category"
-              class="w-full text-white/70 text py-6 rounded-2xl m-2 btn"
-              @click="selectcategory(category)"
+    <Transition name="fade-slide" appear
+      ><div
+        v-if="isOpen"
+        class="flex items-center justify-center fixed inset-0 z-60 bg-black/20"
+        @click="mode()"
+      >
+        <div class="backdrop-blur-3xl h-full w-full flex items-center justify-center bg-black/10">
+          <div class="h-full w-full flex items-center justify-center z-50 m-4">
+            <div
+              class="md:min-h-64 w-96 min-h-22 cards-1 backdrop-blur-3xl flex flex-col items-center justify-center p-4 rounded-2xl"
+              @click.stop
             >
-              {{ category }}
-            </button>
+              <button
+                v-for="category in categories"
+                :key="category"
+                class="w-[80%] text md:py-6 py-4 rounded-2xl m-2 btn"
+                @click="(selectcategory(category), mode())"
+              >
+                {{ category }}
+              </button>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
+      </div></Transition
+    >
   </div>
 </template>
 
 <style scoped>
+.fade-slide-enter-active,
+.fade-slide-leave-active {
+  transition:
+    opacity 0.3s ease-in-out,
+    transform 0.3s ease-in-out;
+}
+
+.fade-slide-enter-from,
+.fade-slide-leave-to {
+  transform: translateY(-20px);
+  opacity: 0;
+}
+
 .background {
   background: linear-gradient(-45deg, #1a1a2e, #16213e, #0f3460, #1a1a2e);
   background-size: 400% 400%;
@@ -251,7 +289,7 @@ async function fetchanime() {
 }
 
 .cards-1 {
-  background: rgba(255, 255, 255, 0.3);
+  background: linear-gradient(-45deg, #6f6f8e, #455ea3, #4e81c0, #5a5a8f);
   border: 2px solid rgba(255, 255, 255, 0.1);
 }
 .cards {
