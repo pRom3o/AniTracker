@@ -5,7 +5,7 @@ import Nav from '@/components/Nav.vue'
 <template>
   <div class="h-screen flex-1 w-full text-center text-white/80 body overflow-auto">
     <Nav />
-    <main class="flex flex-col w-full px-10 md:pt-40 pt-30 pb-20 md:pb-30">
+    <main class="flex flex-col w-full px-10 md:pt-34 pt-30 pb-20 md:pb-30">
       <header class="text-center flex flex-col items-center">
         <h1
           class="md:text-6xl text-[2rem] w-full font-extrabold md:mb-6 mb-4 md:w-[50%] flex items-center text-center md:px-10"
@@ -19,7 +19,7 @@ import Nav from '@/components/Nav.vue'
       </header>
 
       <section class="w-full flex items-center justify-center">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-12">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-10">
           <!-- Recommendations card -->
           <div
             class="md:w-[300px] w-full px-6 md:py-20 py-10 transition-transform duration-500 ease-in-out transform hover:-translate-y-3 cards rounded-3xl"
