@@ -49,11 +49,11 @@ const debounced = debounce(async function fetchanime() {
 
 <template>
   <div
-    class="w-full h-full flex justify-center md:px-4 backdrop-blur-md bg-black/30 fixed"
+    class="w-full h-full flex justify-center md:px-4 backdrop-blur-md bg-black/30 fixed px-4"
     v-show="searchbar"
   >
     <div
-      class="lg:mt-62 md:mt-20 h-full w-full md:w-[70%] lg:w-[40%] lg:h-[50%] cards md:rounded-4xl flex flex-col items-center justify-between p-6 text-gray-300"
+      class="lg:mt-62 mt-30 md:w-[70%] lg:w-[40%] lg:h-[50%] h-[70%] cards rounded-4xl flex flex-col items-center justify-between p-6 text-gray-300"
     >
       <div class="flex w-full space-x-2 md:py-4 mb-4 md:h-[15%] items-center">
         <button

@@ -16,7 +16,7 @@ import { watchlist, removeFromWatchlist } from '../state/watchlistStates'
         <h1 class="md:text-4xl header"><i>Nothing in your watchlist...</i></h1>
       </div>
       <div v-else class="">
-        <h2 class="text-center md:text-3xl font-bold text-xl md:m-20 m-8">My watchlist</h2>
+        <h2 class="text-center md:text-3xl font-bold text-2xl md:m-20 mb-8 mt-12">My watchlist</h2>
         <!-- Watched section -->
         <Transition name="fade-slide" appear
           ><div v-if="watchlist['Watched'].length > 0" class="mt-8">
