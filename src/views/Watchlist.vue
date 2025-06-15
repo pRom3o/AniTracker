@@ -1,13 +1,8 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <script setup>
-// import { onMounted } from 'vue'
 import Nav from '../components/Nav.vue'
 
-// shadow-xl md:p-3 transition-transform duration-500 ease-in-out transform md:hover:scale-102
-
 import { watchlist, removeFromWatchlist } from '../state/watchlistStates'
-
-// onMounted(localStorage.clear())
 </script>
 
 <template>
