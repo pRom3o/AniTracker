@@ -22,20 +22,20 @@ import { watchlist, removeFromWatchlist } from '../state/watchlistStates'
           ><div v-if="watchlist['Watched'].length > 0" class="mt-8">
             <h2 class="font-bold text-2xl md:text-4xl">Watched</h2>
             <div class="flex items-center justify-center">
-              <div class="grid lg:grid-cols-6 md:grid-cols-5 grid-cols-2 gap-3 md:w-[80%] w-full">
+              <div class="grid lg:grid-cols-6 md:grid-cols-5 grid-cols-3 gap-3 md:w-[80%] w-full">
                 <div
                   v-for="(anime, index) in watchlist['Watched']"
                   :key="index"
-                  class="p-3 background rounded-2xl shadow-2xl md:p-3 transition-transform duration-500 ease-in-out transform md:hover:scale-102"
+                  class="p-2 background rounded-2xl shadow-2xl md:p-3 transition-transform duration-500 ease-in-out transform md:hover:scale-102"
                 >
-                  <div class="flex flex-col h-full justify-between">
+                  <div class="flex flex-col h-full justify-evenly">
                     <!-- image source -->
                     <img
                       :src="anime.images.jpg.image_url"
                       :alt="anime.title_english || 'Anime poster'"
                       class="max-h-full md:aspect-[3/3] aspect-[2/3] w-full object-cover rounded-lg"
                     />
-                    <p class="w-full mt-2">
+                    <p class="w-full my-2 md:text-base text-xs">
                       {{
                         anime.title_english && anime.title_english.length > 30
                           ? anime.title_english.slice(0, 30) + '...'
@@ -50,7 +50,7 @@ import { watchlist, removeFromWatchlist } from '../state/watchlistStates'
                       Remove from watchlist
                     </button>
                     <button
-                      class="w-full p-2 items-center justify-around text-xs cursor-pointer flex md:hidden rounded-3xl m-1 bg-black/10"
+                      class="w-full p-2 items-center justify-around text-xs cursor-pointer flex md:hidden rounded-3xl bg-black/10"
                       @click="removeFromWatchlist(anime, 'Watched')"
                     >
                       <!-- SVG content -->
@@ -68,20 +68,20 @@ import { watchlist, removeFromWatchlist } from '../state/watchlistStates'
           ><div v-if="watchlist['Currently watching'].length > 0" class="mt-8">
             <h2 class="font-bold text-2xl md:text-4xl">Currently watching</h2>
             <div class="flex items-center justify-center">
-              <div class="grid lg:grid-cols-6 md:grid-cols-5 grid-cols-2 gap-3 md:w-[80%] w-full">
+              <div class="grid lg:grid-cols-6 md:grid-cols-5 grid-cols-3 gap-3 md:w-[80%] w-full">
                 <div
                   v-for="(anime, index) in watchlist['Currently watching']"
                   :key="index"
-                  class="p-3 background rounded-2xl shadow-2xl md:p-3 transition-transform duration-500 ease-in-out transform md:hover:scale-102"
+                  class="p-2 background rounded-2xl shadow-2xl md:p-3 transition-transform duration-500 ease-in-out transform md:hover:scale-102"
                 >
-                  <div class="flex flex-col h-full justify-between">
+                  <div class="flex flex-col h-full justify-evenly">
                     <!-- image source -->
                     <img
                       :src="anime.images.jpg.image_url"
                       :alt="anime.title_english || 'Anime poster'"
                       class="max-h-full md:aspect-[3/3] aspect-[2/3] w-full object-cover rounded-lg"
                     />
-                    <p class="w-full mt-2">
+                    <p class="w-full my-2 md:text-base text-xs">
                       {{
                         anime.title_english && anime.title_english.length > 30
                           ? anime.title_english.slice(0, 30) + '...'
@@ -114,20 +114,20 @@ import { watchlist, removeFromWatchlist } from '../state/watchlistStates'
           <div v-if="watchlist['Interested in'].length > 0" class="mt-8">
             <h2 class="font-bold text-2xl md:text-4xl">Interested in</h2>
             <div class="flex items-center justify-center">
-              <div class="grid lg:grid-cols-6 md:grid-cols-5 grid-cols-2 gap-3 md:w-[80%] w-full">
+              <div class="grid lg:grid-cols-6 md:grid-cols-5 grid-cols-3 gap-3 md:w-[80%] w-full">
                 <div
                   v-for="(anime, index) in watchlist['Interested in']"
                   :key="index"
-                  class="p-3 background rounded-2xl shadow-2xl md:p-3 transition-transform duration-500 ease-in-out transform md:hover:scale-102"
+                  class="p-2 background rounded-2xl shadow-2xl md:p-3 transition-transform duration-500 ease-in-out transform md:hover:scale-102"
                 >
-                  <div class="flex flex-col h-full justify-between">
+                  <div class="flex flex-col h-full justify-evenly">
                     <!-- image source -->
                     <img
                       :src="anime.images.jpg.image_url"
                       :alt="anime.title_english || 'Anime poster'"
                       class="max-h-full md:aspect-[3/3] aspect-[2/3] w-full object-cover rounded-lg"
                     />
-                    <p class="w-full mt-2">
+                    <p class="w-full my-2 md:text-base text-xs">
                       {{
                         anime.title_english && anime.title_english.length > 30
                           ? anime.title_english.slice(0, 30) + '...'
