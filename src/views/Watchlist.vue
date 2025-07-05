@@ -10,7 +10,7 @@ onMounted(localStorage.removeItem('watchlist'))
 </script>
 
 <template>
-  <div class="min-h-screen w-full text-white/80 text-center flex flex-col body">
+  <div class="minh-screen w-full text-white/80 text-center flex flex-col body">
     <Nav />
     <div class="p-6 flex-1 mt-5">
       <div
