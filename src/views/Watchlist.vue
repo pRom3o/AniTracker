@@ -2,7 +2,11 @@
 <script setup>
 import Nav from '../components/Nav.vue'
 
-import { watchlist, removeFromWatchlist } from '../state/watchlistStates'
+import { watchlist, removeFromWatchlist } from '../../constants/watchlistStates'
+import { onMounted } from 'vue'
+
+onMounted(localStorage.clear())
+onMounted(localStorage.removeItem('watchlist'))
 </script>
 
 <template>

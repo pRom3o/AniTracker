@@ -1,4 +1,5 @@
 import { ref, reactive } from 'vue'
+// import supabase from '../src/state/supabaseClient'
 
 export const watchlist = reactive({ Watched: [], 'Currently watching': [], 'Interested in': [] })
 export const isOpen = ref(false)
@@ -17,6 +18,7 @@ if (stored) {
   // Assign each category individually to maintain reactivity
   Object.assign(watchlist, pasrsed)
 }
+
 const selectedAnime = ref({})
 
 export const addToWatchlist = (anime) => {

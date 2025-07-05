@@ -10,7 +10,7 @@ import {
   searchbar,
   anisearch,
   mode,
-} from '../state/watchlistStates'
+} from '../../constants/watchlistStates'
 
 const animename = ref('')
 
