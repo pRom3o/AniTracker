@@ -3,7 +3,7 @@
 // import { ref } from 'vue'
 import { RouterLink } from 'vue-router'
 import Search from './Search.vue'
-import { searchbar, anisearch } from '../../constants/watchlistStates'
+import { searchbar, anisearch } from '../services/watchlistServices'
 </script>
 
 <template>

@@ -5,28 +5,28 @@ import { ref } from 'vue'
 import {
   addToWatchlist,
   isOpen,
-  selectcategory,
   categories,
   searchbar,
   anisearch,
   mode,
-} from '../../constants/watchlistStates'
+  animeName,
+  selectedCategory,
+  add,
+} from '../services/watchlistServices'
 
-const animename = ref('')
+// reactive variable to hold the fetched anime data
+const animeResults = ref([])
 
-// Create a reactive variable to hold the fetched anime data
-const animeresult = ref([])
-// create a variable for loading state
+// variable for loading state
 const loading = ref(false)
-// function to fetch  data from API
+
+// function to fetch  data from Jikan API with debounce
 const debounced = debounce(async function fetchanime() {
   // loading state
   loading.value = true
-  // setTimeout for loading screen
-
   // fetch anime info from jinka API
   try {
-    const response = await fetch(`https://api.jikan.moe/v4/anime?q=${animename.value}`)
+    const response = await fetch(`https://api.jikan.moe/v4/anime?q=${animeName.value}`)
     // to check if request was successful
     if (!response.ok) {
       throw new Error('Unsuccessful, Try again')
@@ -34,8 +34,7 @@ const debounced = debounce(async function fetchanime() {
     // convert response to json format and store
     const data = await response.json()
     // store data in ref array
-    animeresult.value = data.data
-    console.log(animeresult.value)
+    animeResults.value = data.data
   } catch (error) {
     // Handle any errors if the request fails
     console.error('Error fetching anime:', error)
@@ -43,8 +42,6 @@ const debounced = debounce(async function fetchanime() {
     loading.value = false
   }
 }, 300)
-
-//onMounted onMounted(localStorage.clear())
 </script>
 
 <template>
@@ -76,7 +73,7 @@ const debounced = debounce(async function fetchanime() {
           <input
             type="text"
             placeholder="Search animes..."
-            v-model="animename"
+            v-model="animeName"
             @keyup.enter="fetchanime()"
             @input="debounced"
             class="w-full p-2 rounded-full outline-0 focus:outline-0"
@@ -104,7 +101,7 @@ const debounced = debounce(async function fetchanime() {
       </div>
       <div
         class="h-[85%] flex flex-col items-center justify-center text-gray-400"
-        v-if="animename == 0"
+        v-if="animeName == 0"
       >
         <p class="p-2 opacity-70">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
@@ -169,7 +166,7 @@ const debounced = debounce(async function fetchanime() {
         </div>
         <div
           class="w-full max-h-[35%] py-2 flex items-center justify-evenly md:space-x-0 space-x-3 text-white border-b border-[#333333]"
-          v-for="anime in animeresult"
+          v-for="anime in animeResults"
           :key="anime.mal_id"
           v-else
         >
@@ -208,10 +205,7 @@ const debounced = debounce(async function fetchanime() {
                 </svg>
                 {{ anime.score }} - {{ anime.type }} - {{ anime.year }} - {{ anime.status }}
               </p>
-              <button
-                class="hidden md:flex items-center cursor-pointer"
-                @click="addToWatchlist(anime)"
-              >
+              <button class="hidden md:flex items-center cursor-pointer" @click="add(anime)">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24">
                   <path
                     fill="#fff"
@@ -220,10 +214,7 @@ const debounced = debounce(async function fetchanime() {
                 </svg>
                 Add to watchlist
               </button>
-              <button
-                class="md:hidden flex items-center cursor-pointer mx-2"
-                @click="addToWatchlist(anime)"
-              >
+              <button class="md:hidden flex items-center cursor-pointer mx-2" @click="add(anime)">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24">
                   <path
                     fill="#fff"
@@ -249,14 +240,25 @@ const debounced = debounce(async function fetchanime() {
               class="md:min-h-64 w-96 min-h-22 cards-1 backdrop-blur-3xl flex flex-col items-center justify-center p-4 rounded-2xl"
               @click.stop
             >
-              <button
-                v-for="category in categories"
-                :key="category"
-                class="w-[80%] text md:py-6 py-4 rounded-2xl m-2 btn"
-                @click="(selectcategory(category), mode())"
-              >
-                {{ category }}
-              </button>
+              <div class="flex items-center text-white">
+                <label for="categories" class="text-lg">Select category: </label>
+                <select
+                  name="category"
+                  id="category"
+                  v-model="selectedCategory"
+                  class="bg-gray text-sm outline-none text-center"
+                  @change="addToWatchlist()"
+                >
+                  <option
+                    :value="category"
+                    v-for="category in categories"
+                    :key="category"
+                    class="text-black text-sm"
+                  >
+                    {{ category }}
+                  </option>
+                </select>
+              </div>
             </div>
           </div>
         </div>
