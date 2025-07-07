@@ -7,6 +7,7 @@ import {
   removeFromWatchlist,
   fetchData,
   categories,
+  updateCategory,
 } from '../services/watchlistServices'
 
 onMounted(() => {

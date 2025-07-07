@@ -94,7 +94,6 @@ export const updateCategory = async (id, category) => {
     console.error('update error:', error)
   } else {
     console.log('Updated:', data)
-    category = ''
     fetchData() // refresh list
   }
 }
