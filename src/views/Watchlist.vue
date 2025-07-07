@@ -26,6 +26,7 @@ const currentlyWatchingList = computed(() =>
 const interestedInList = computed(() =>
   watchlist.value.filter((anime) => anime.status === 'Interested in'),
 )
+console.log('Interested in', interestedInList.value)
 </script>
 
 <template>

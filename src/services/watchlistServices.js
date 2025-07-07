@@ -29,7 +29,6 @@ export const fetchData = async () => {
     console.error('Fetch error:', error)
   } else {
     watchlist.value = data
-    console.log(data)
   }
 }
 
