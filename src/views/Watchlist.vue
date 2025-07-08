@@ -8,7 +8,12 @@ import {
   fetchData,
   categories,
   updateCategory,
+  open_menu_id,
+  toggleMenu,
+  showSelect,
+  select_edit_id,
 } from '../services/watchlistServices'
+import EllipsisIcon from '../../public/icons/ellipsisIcon.vue'
 
 onMounted(() => {
   fetchData()
@@ -18,15 +23,12 @@ onMounted(() => {
 const watchedList = computed(() => watchlist.value.filter((anime) => anime.status === 'Watched'))
 
 // array to store Currently watching animes
-const currentlyWatchingList = computed(() =>
-  watchlist.value.filter((anime) => anime.status === 'Currently watching'),
-)
+const watchingList = computed(() => watchlist.value.filter((anime) => anime.status === 'Watching'))
 
 // array to store Interested in animes
 const interestedInList = computed(() =>
   watchlist.value.filter((anime) => anime.status === 'Interested in'),
 )
-console.log('Interested in', interestedInList.value)
 </script>
 
 <template>
@@ -43,20 +45,24 @@ console.log('Interested in', interestedInList.value)
           ><div v-if="watchedList.length > 0" class="mt-8">
             <h2 class="font-bold text-2xl md:text-4xl">Watched</h2>
             <div class="flex items-center justify-center">
-              <div class="grid lg:grid-cols-6 md:grid-cols-5 grid-cols-3 gap-3 md:w-[80%] w-full">
+              <div class="grid lg:grid-cols-6 md:grid-cols-5 grid-cols-3 gap-2 md:w-[80%] w-full">
                 <div
                   v-for="(anime, index) in watchedList"
                   :key="index"
-                  class="p-2 background rounded-2xl shadow-2xl md:p-3 transition-transform duration-500 ease-in-out transform md:hover:scale-102"
+                  class="p-2 background rounded-2xl shadow-2xl md:p-3 transition-transform duration-500 ease-in-out transform md:hover:scale-102 relative"
                 >
-                  <div class="flex flex-col h-full justify-evenly">
+                  <EllipsisIcon
+                    class="p-1 cursor-pointer mt-2 rounded-full hover:bg-black/20 absolute bottom-2 right-0 md:mx-1"
+                    @click="toggleMenu(anime.id)"
+                  />
+                  <div class="flex flex-col h-full justify-evenly space-y-2">
                     <!-- image source -->
                     <img
                       :src="anime.image_url"
                       :alt="anime.title_english || 'Anime poster'"
                       class="max-h-full md:aspect-[3/3] aspect-[2/3] w-full object-cover rounded-lg"
                     />
-                    <p class="w-full my-2 md:text-base text-xs">
+                    <p class="w-full my\-2 pr-3 md:text-base text-[10px]">
                       {{
                         anime.title_english && anime.title_english.length > 30
                           ? anime.title_english.slice(0, 30) + '...'
@@ -64,34 +70,50 @@ console.log('Interested in', interestedInList.value)
                       }}
                     </p>
                     <!-- buttons -->
-                    <button
-                      class="w-full p-3 hidden md:flex items-center justify-evenly text-sm cursor-pointer rounded-3xl hover:bg-black/20 mt-2"
-                      @click="removeFromWatchlist(anime.id)"
+                    <div
+                      class="flex items-center flex-col w-[100%] h-[100%] backdrop-blur-sm justify-center text-gray-300 absolute top-0 left-0 p-2 rounded-3xl"
+                      v-if="open_menu_id === anime.id"
+                      @click.self="toggleMenu(anime.id)"
                     >
-                      Remove from watchlist
-                    </button>
-                    <select
-                      name="category"
-                      id="category"
-                      class="text-sm outline-none"
-                      v-model="anime.status"
-                      @change="updateCategory(anime.id, anime.status)"
-                    >
-                      <option
-                        :value="category"
-                        v-for="category in categories"
-                        :key="category"
-                        class="bg-blue-400 text-black"
+                      <button
+                        class="w-full p-3 hidden md:flex items-center justify-evenly text-sm cursor-pointer rounded-3xl hover:bg-black/30 bg-black/50 mb-3"
+                        @click="removeFromWatchlist(anime.id)"
                       >
-                        {{ category }}
-                      </option>
-                    </select>
-                    <button
-                      class="w-full p-2 items-center justify-around text-xs cursor-pointer flex md:hidden rounded-3xl bg-black/10"
-                      @click="removeFromWatchlist(anime.id)"
-                    >
-                      Remove
-                    </button>
+                        Remove
+                      </button>
+
+                      <button
+                        class="w-full p-2 items-center justify-around text-xs cursor-pointer flex md:hidden rounded-3xl bg-black/50"
+                        @click="removeFromWatchlist(anime.id)"
+                      >
+                        Remove
+                      </button>
+                      <button
+                        class="w-full md:p-3 p-1 flex items-center justify-evenly md:text-sm text-xs cursor-pointer rounded-3xl hover:bg-black/30 mt-3 bg-black/50"
+                        @click="showSelect(anime.id)"
+                      >
+                        Update category
+                      </button>
+                      <div
+                        id="category"
+                        class="w-full h-full absolute bg-zinc-800/80 text-white flex flex-col items-center justify-center space-y-4 p-2"
+                        v-if="select_edit_id === anime.id"
+                      >
+                        <div
+                          class="h-full w-full backdrop-blur-xl flex flex-col items-center justify-center p-2 space-y-5"
+                          @click.self="showSelect(anime.id)"
+                        >
+                          <button
+                            v-for="category in categories"
+                            :key="category"
+                            @click="(updateCategory(anime.id, category), toggleMenu(anime.id))"
+                            class="w-full p-2 items-center justify-around cursor-pointer md:text-sm text-[10px] flex rounded-3xl border border-gray-500 bg-gray-400/20 hover:bg-gray-400/40"
+                          >
+                            {{ category }}
+                          </button>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -99,24 +121,29 @@ console.log('Interested in', interestedInList.value)
           </div></Transition
         >
         <!-- Currently watching section -->
+
         <Transition name="fade-slide" appear
-          ><div v-if="currentlyWatchingList.length > 0" class="mt-8">
+          ><div v-if="watchingList.length > 0" class="mt-8">
             <h2 class="font-bold text-2xl md:text-4xl">Currently watching</h2>
             <div class="flex items-center justify-center">
-              <div class="grid lg:grid-cols-6 md:grid-cols-5 grid-cols-3 gap-3 md:w-[80%] w-full">
+              <div class="grid lg:grid-cols-6 md:grid-cols-5 grid-cols-3 gap-2 md:w-[80%] w-full">
                 <div
-                  v-for="(anime, index) in currentlyWatchingList"
+                  v-for="(anime, index) in watchingList"
                   :key="index"
-                  class="p-2 background rounded-2xl shadow-2xl md:p-3 transition-transform duration-500 ease-in-out transform md:hover:scale-102"
+                  class="p-2 background rounded-2xl shadow-2xl md:p-3 transition-transform duration-500 ease-in-out transform md:hover:scale-102 relative"
                 >
-                  <div class="flex flex-col h-full justify-evenly">
+                  <EllipsisIcon
+                    class="p-1 cursor-pointer mt-2 rounded-full hover:bg-black/20 absolute bottom-2 right-0 md:mx-1"
+                    @click="toggleMenu(anime.id)"
+                  />
+                  <div class="flex flex-col h-full justify-evenly space-y-2">
                     <!-- image source -->
                     <img
                       :src="anime.image_url"
                       :alt="anime.title_english || 'Anime poster'"
                       class="max-h-full md:aspect-[3/3] aspect-[2/3] w-full object-cover rounded-lg"
                     />
-                    <p class="w-full my-2 md:text-base text-xs">
+                    <p class="w-full my\-2 pr-3 md:text-base text-[10px]">
                       {{
                         anime.title_english && anime.title_english.length > 30
                           ? anime.title_english.slice(0, 30) + '...'
@@ -124,29 +151,50 @@ console.log('Interested in', interestedInList.value)
                       }}
                     </p>
                     <!-- buttons -->
-                    <button
-                      class="w-full p-3 hidden md:flex items-center justify-evenly text-sm cursor-pointer rounded-3xl hover:bg-black/20 mt-2"
-                      @click="removeFromWatchlist(anime.id)"
+                    <div
+                      class="flex items-center flex-col w-[100%] h-[100%] backdrop-blur-sm justify-center text-gray-300 absolute top-0 left-0 p-2 rounded-3xl"
+                      v-if="open_menu_id === anime.id"
+                      @click.self="toggleMenu(anime.id)"
                     >
-                      Remove from watchlist
-                    </button>
-                    <select
-                      name="category"
-                      id="category"
-                      class="text-sm outline-none"
-                      v-model="anime.status"
-                      @change="updateCategory(anime.id, anime.status)"
-                    >
-                      <option :value="category" v-for="category in categories" :key="category">
-                        {{ category }}
-                      </option>
-                    </select>
-                    <button
-                      class="w-full p-2 items-center justify-around text-xs cursor-pointer flex md:hidden rounded-3xl bg-black/10"
-                      @click="removeFromWatchlist(anime.id)"
-                    >
-                      Remove
-                    </button>
+                      <button
+                        class="w-full p-3 hidden md:flex items-center justify-evenly text-sm cursor-pointer rounded-3xl hover:bg-black/30 bg-black/50 mb-3"
+                        @click="removeFromWatchlist(anime.id)"
+                      >
+                        Remove
+                      </button>
+
+                      <button
+                        class="w-full p-2 items-center justify-around text-xs cursor-pointer flex md:hidden rounded-3xl bg-black/50"
+                        @click="removeFromWatchlist(anime.id)"
+                      >
+                        Remove
+                      </button>
+                      <button
+                        class="w-full md:p-3 p-1 flex items-center justify-evenly md:text-sm text-xs cursor-pointer rounded-3xl hover:bg-black/30 mt-3 bg-black/50"
+                        @click="showSelect(anime.id)"
+                      >
+                        Update category
+                      </button>
+                      <div
+                        id="category"
+                        class="w-full h-full absolute bg-zinc-800/80 text-white flex flex-col items-center justify-center space-y-4 p-2"
+                        v-if="select_edit_id === anime.id"
+                      >
+                        <div
+                          class="h-full w-full backdrop-blur-xl flex flex-col items-center justify-center p-2 space-y-5"
+                          @click.self="showSelect(anime.id)"
+                        >
+                          <button
+                            v-for="category in categories"
+                            :key="category"
+                            @click="(updateCategory(anime.id, category), toggleMenu(anime.id))"
+                            class="w-full p-2 items-center justify-around cursor-pointer md:text-sm text-[10px] flex rounded-3xl border border-gray-500 bg-gray-400/20 hover:bg-gray-400/40"
+                          >
+                            {{ category }}
+                          </button>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -154,24 +202,29 @@ console.log('Interested in', interestedInList.value)
           </div></Transition
         >
         <!-- Interested in section -->
+
         <Transition name="fade-slide" appear
           ><div v-if="interestedInList.length > 0" class="mt-8">
             <h2 class="font-bold text-2xl md:text-4xl">Interested in</h2>
             <div class="flex items-center justify-center">
-              <div class="grid lg:grid-cols-6 md:grid-cols-5 grid-cols-3 gap-3 md:w-[80%] w-full">
+              <div class="grid lg:grid-cols-6 md:grid-cols-5 grid-cols-3 gap-2 md:w-[80%] w-full">
                 <div
                   v-for="(anime, index) in interestedInList"
                   :key="index"
-                  class="p-2 background rounded-2xl shadow-2xl md:p-3 transition-transform duration-500 ease-in-out transform md:hover:scale-102"
+                  class="p-2 background rounded-2xl shadow-2xl md:p-3 transition-transform duration-500 ease-in-out transform md:hover:scale-102 relative"
                 >
-                  <div class="flex flex-col h-full justify-evenly">
+                  <EllipsisIcon
+                    class="p-1 cursor-pointer mt-2 rounded-full hover:bg-black/20 absolute bottom-2 right-0 md:mx-1"
+                    @click="toggleMenu(anime.id)"
+                  />
+                  <div class="flex flex-col h-full justify-evenly space-y-2">
                     <!-- image source -->
                     <img
                       :src="anime.image_url"
                       :alt="anime.title_english || 'Anime poster'"
                       class="max-h-full md:aspect-[3/3] aspect-[2/3] w-full object-cover rounded-lg"
                     />
-                    <p class="w-full my-2 md:text-base text-xs">
+                    <p class="w-full my\-2 pr-3 md:text-base text-[10px]">
                       {{
                         anime.title_english && anime.title_english.length > 30
                           ? anime.title_english.slice(0, 30) + '...'
@@ -179,32 +232,50 @@ console.log('Interested in', interestedInList.value)
                       }}
                     </p>
                     <!-- buttons -->
-                    <button
-                      class="w-full p-3 hidden md:flex items-center justify-evenly text-sm cursor-pointer rounded-3xl hover:bg-black/20 mt-2"
-                      @click="removeFromWatchlist(anime.id)"
+                    <div
+                      class="flex items-center flex-col w-[100%] h-[100%] backdrop-blur-sm justify-center text-gray-300 absolute top-0 left-0 p-2 rounded-3xl"
+                      v-if="open_menu_id === anime.id"
+                      @click.self="toggleMenu(anime.id)"
                     >
-                      Remove from watchlist
-                    </button>
-                    <div class="">
-                      <label for="category">update category</label>
-                      <select
-                        name="category"
-                        id="category"
-                        class="text-sm outline-none"
-                        v-model="anime.status"
-                        @change="updateCategory(anime.id, anime.status)"
+                      <button
+                        class="w-full p-3 hidden md:flex items-center justify-evenly text-sm cursor-pointer rounded-3xl hover:bg-black/30 bg-black/50 mb-3"
+                        @click="removeFromWatchlist(anime.id)"
                       >
-                        <option :value="category" v-for="category in categories" :key="category">
-                          {{ category }}
-                        </option>
-                      </select>
+                        Remove
+                      </button>
+
+                      <button
+                        class="w-full p-2 items-center justify-around text-xs cursor-pointer flex md:hidden rounded-3xl bg-black/50"
+                        @click="removeFromWatchlist(anime.id)"
+                      >
+                        Remove
+                      </button>
+                      <button
+                        class="w-full md:p-3 p-1 flex items-center justify-evenly md:text-sm text-xs cursor-pointer rounded-3xl hover:bg-black/30 mt-3 bg-black/50"
+                        @click="showSelect(anime.id)"
+                      >
+                        Update category
+                      </button>
+                      <div
+                        id="category"
+                        class="w-full h-full absolute bg-zinc-800/80 text-white flex flex-col items-center justify-center space-y-4 p-2"
+                        v-if="select_edit_id === anime.id"
+                      >
+                        <div
+                          class="h-full w-full backdrop-blur-xl flex flex-col items-center justify-center p-2 space-y-5"
+                          @click.self="showSelect(anime.id)"
+                        >
+                          <button
+                            v-for="category in categories"
+                            :key="category"
+                            @click="(updateCategory(anime.id, category), toggleMenu(anime.id))"
+                            class="w-full p-2 items-center justify-around cursor-pointer md:text-sm text-[10px] flex rounded-3xl border border-gray-500 bg-gray-400/20 hover:bg-gray-400/40"
+                          >
+                            {{ category }}
+                          </button>
+                        </div>
+                      </div>
                     </div>
-                    <button
-                      class="w-full p-2 items-center justify-around text-xs cursor-pointer flex md:hidden rounded-3xl bg-black/10"
-                      @click="removeFromWatchlist(anime.id)"
-                    >
-                      Remove
-                    </button>
                   </div>
                 </div>
               </div>

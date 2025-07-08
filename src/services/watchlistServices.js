@@ -6,6 +6,18 @@ export const isOpen = ref(false) // ref to track category modal state
 export const isLoading = ref(false) // ref to track loading state
 export const searchbar = ref(false) // ref to track search modal state
 
+// Toast
+export const toastMessage = ref('')
+export const toastType = ref('success') // 'success' | 'error'
+
+export const showToast = (message, type = 'success') => {
+  toastMessage.value = message
+  toastType.value = type
+  setTimeout(() => {
+    toastMessage.value = ''
+  }, 3000)
+}
+
 // switch category modal state
 export const mode = () => {
   isOpen.value = !isOpen.value
@@ -20,7 +32,7 @@ export const anisearch = () => {
 export const animeName = ref('')
 
 // categories array
-export const categories = ['Watched', 'Currently watching', 'Interested in']
+export const categories = ['Watched', 'Watching', 'Interested in']
 
 // Fetch existing watchlist items
 export const fetchData = async () => {
@@ -63,6 +75,7 @@ export const addToWatchlist = async () => {
     console.log('Insert Error', error)
   } else {
     console.log('Inserted', data)
+    showToast('Anime added successfully!', 'success')
     fetchData()
     selectedCategory.value = ''
     selectedAnime.value = {}
@@ -76,6 +89,7 @@ export const removeFromWatchlist = async (id) => {
   if (error) {
     console.error('delete error:', error)
   } else {
+    showToast('Deleted', 'error')
     console.log('deleted:', data)
     fetchData() // refresh list
   }
@@ -92,7 +106,28 @@ export const updateCategory = async (id, category) => {
   if (error) {
     console.error('update error:', error)
   } else {
+    showToast('category updated successfully!', 'success')
     console.log('Updated:', data)
     fetchData() // refresh list
+  }
+}
+
+// ellipson svg
+export const open_menu_id = ref(null) // track anime id whose ellipson was clicked
+export const select_edit_id = ref(null) // track anime id whose ellipson was clicked
+
+export const toggleMenu = (anime_id) => {
+  if (open_menu_id.value === anime_id) {
+    open_menu_id.value = null
+  } else {
+    open_menu_id.value = anime_id
+  }
+}
+
+export const showSelect = (anime_id) => {
+  if (select_edit_id.value === anime_id) {
+    select_edit_id.value = null
+  } else {
+    select_edit_id.value = anime_id
   }
 }

@@ -48,6 +48,7 @@ const debounced = debounce(async function fetchanime() {
   <div
     class="w-full h-full flex justify-center md:px-4 backdrop-blur-md bg-black/30 fixed px-4"
     v-show="searchbar"
+    @click.self="anisearch()"
   >
     <div
       class="lg:mt-62 mt-30 md:w-[70%] lg:w-[40%] lg:h-[50%] h-[70%] cards rounded-4xl flex flex-col items-center justify-between p-6 text-gray-300"
@@ -237,7 +238,7 @@ const debounced = debounce(async function fetchanime() {
         <div class="backdrop-blur-3xl h-full w-full flex items-center justify-center bg-black/10">
           <div class="h-full w-full flex items-center justify-center z-50 m-4">
             <div
-              class="md:min-h-64 w-96 min-h-22 cards-1 backdrop-blur-3xl flex flex-col items-center justify-center p-4 rounded-2xl"
+              class="w-96 min-h-22 cards-1 backdrop-blur-3xl flex flex-col items-center justify-center p-4 rounded-2xl"
               @click.stop
             >
               <div class="flex items-center text-white">
@@ -246,7 +247,7 @@ const debounced = debounce(async function fetchanime() {
                   name="category"
                   id="category"
                   v-model="selectedCategory"
-                  class="bg-gray text-sm outline-none text-center"
+                  class="text-sm outline-none text-center"
                   @change="addToWatchlist()"
                 >
                   <option
