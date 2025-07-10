@@ -1,14 +1,30 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <script setup>
-// import { ref } from 'vue'
+import { nextTick } from 'vue'
 import { RouterLink } from 'vue-router'
 import Search from './Search.vue'
 import { searchbar, anisearch } from '../services/watchlistServices'
+import { userSession, toggleDropdown, isDropdownOpen, signOutUser } from '../services/authServices'
+import router from '../router/index'
+import ProfileIcon from '/public/icons/ProfileIcon.vue'
+import LogoutIcon from '/public/icons/LogoutIcon.vue'
+
+const handleSignOut = async () => {
+  const { error } = await signOutUser()
+  if (error) {
+    console.error('Sign out error: ', error.message)
+    return
+  }
+  userSession.value = null
+  nextTick()
+  router.push('/auth')
+}
 </script>
 
 <template>
   <div
     class="max-w-full rounded-full backdrop-blur-md overlay p-2 md:m-2 flex items-center justify-between fixed left-1 right-1 top-2 z-2 text-gray-300"
+    @click.self="toggleDropdown"
   >
     <p class="text-center p-4 rounded-full hover:backdrop-blur-lg hidden md:flex">
       <RouterLink to="/" class="logo">AniTracker</RouterLink>
@@ -41,13 +57,38 @@ import { searchbar, anisearch } from '../services/watchlistServices'
         <RouterLink to="/watchlist">Watchlist</RouterLink>
       </li>
     </div>
-    <div class="md:w-[5%] flex justify-center p-2 hover:backdrop-blur-lg rounded-full">
-      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-        <path
-          fill="currentColor"
-          d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2m0 4c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6m0 14c-2.03 0-4.43-.82-6.14-2.88a9.95 9.95 0 0 1 12.28 0C16.43 19.18 14.03 20 12 20"
-        />
-      </svg>
+    <div class="md:min-w-[5%] flex justify-center p-2 hover:backdrop-blur-lg rounded-full relative">
+      <div v-if="userSession" class="flex items-center justify-center">
+        <button @click="toggleDropdown">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+            <path
+              fill="currentColor"
+              d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2m0 4c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6m0 14c-2.03 0-4.43-.82-6.14-2.88a9.95 9.95 0 0 1 12.28 0C16.43 19.18 14.03 20 12 20"
+            />
+          </svg>
+        </button>
+        <Transition name="search"
+          ><div
+            class="absolute top-14 -left-[70%] min-h-36 w-36 background rounded-3xl space-y-5 p-4 flex flex-col items-center justify-evenly"
+            v-if="isDropdownOpen"
+          >
+            <button
+              class="w-full px-5 p-3 bg-[#ffffff0d] border border-[#ffffff1a] rounded-3xl hover:bg-black/20 flex items-center justify-evenly space-x-1"
+            >
+              <RouterLink to="/profile">Profile</RouterLink> <ProfileIcon />
+            </button>
+            <button
+              class="w-full px-5 p-3 bg-[#ffffff0d] border border-[#ffffff1a] rounded-3xl hover:bg-black/20 flex items-center justify-evenly space-x-1"
+              @click="handleSignOut"
+            >
+              <p>Logout</p>
+              <LogoutIcon />
+            </button></div
+        ></Transition>
+      </div>
+      <div class="md:w-[5%] flex justify-center p-2 hover:backdrop-blur-lg rounded-full" v-else>
+        <RouterLink to="/auth">Login/Signup</RouterLink>
+      </div>
     </div>
   </div>
   <Transition name="search">
@@ -56,6 +97,10 @@ import { searchbar, anisearch } from '../services/watchlistServices'
 </template>
 
 <style scoped>
+.background {
+  background: linear-gradient(-45deg, #1a1a2e, #16213e, #0f3460, #1a1a2e);
+  background-size: 400% 400%;
+}
 li {
   list-style: none;
 }

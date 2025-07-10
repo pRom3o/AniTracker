@@ -1,6 +1,12 @@
 <script setup>
 import { RouterView } from 'vue-router'
 import { toastMessage, toastType } from '@/services/watchlistServices'
+import { checkSession } from '../src/services/authServices'
+import { onMounted } from 'vue'
+
+onMounted(() => {
+  checkSession()
+})
 </script>
 
 <template>

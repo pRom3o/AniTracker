@@ -1,10 +1,11 @@
 import { ref } from 'vue'
-import supabase from './supabaseClient'
+import { supabase } from './supabaseClient'
 
 export const watchlist = ref([]) // watchlist
 export const isOpen = ref(false) // ref to track category modal state
 export const isLoading = ref(false) // ref to track loading state
 export const searchbar = ref(false) // ref to track search modal state
+export const is_data_fetched = ref(false)
 
 // Toast
 export const toastMessage = ref('')
@@ -40,7 +41,11 @@ export const fetchData = async () => {
   if (error) {
     console.error('Fetch error:', error)
   } else {
-    watchlist.value = data
+    is_data_fetched.value = false
+    setTimeout(() => {
+      watchlist.value = data
+      is_data_fetched.value = true
+    }, 500)
   }
 }
 
@@ -125,9 +130,15 @@ export const toggleMenu = (anime_id) => {
 }
 
 export const showSelect = (anime_id) => {
-  if (select_edit_id.value === anime_id) {
-    select_edit_id.value = null
-  } else {
-    select_edit_id.value = anime_id
-  }
+  select_edit_id.value = select_edit_id.value === anime_id ? null : anime_id
+}
+
+export const closeMenu = () => {
+  open_menu_id.value = null
+  select_edit_id.value = null
+}
+
+export const handleCategoryUpdate = (id, category) => {
+  closeMenu()
+  updateCategory(id, category)
 }
