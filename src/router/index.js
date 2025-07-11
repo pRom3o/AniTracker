@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import AuthView from '../views/AuthView.vue'
+import { userSession } from '../services/authServices'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -15,6 +16,7 @@ const router = createRouter({
       path: '/watchlist',
       name: 'Watchlist',
       component: () => import('../views/Watchlist.vue'),
+      meta: { requiresAuth: true },
     },
     {
       path: '/profile',
@@ -27,6 +29,14 @@ const router = createRouter({
       component: AuthView,
     },
   ],
+})
+
+router.beforeEach((to, from, next) => {
+  if (to.meta.requiresAuth && !userSession.value) {
+    next('/auth')
+  } else {
+    next()
+  }
 })
 
 export default router

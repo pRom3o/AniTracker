@@ -1,16 +1,25 @@
 <script setup>
 import { user_email, user_password, switchAuthView, signInUser } from '@/services/authServices'
 import router from '../../router/index'
-import { nextTick } from 'vue'
+import { nextTick, ref } from 'vue'
+import LoadingIcon from '/public/icons/LoadingIcon.vue'
+import { show_toast } from '../../services/toastServices'
+
+const loading = ref(false)
 
 const handleSignIn = async () => {
+  loading.value = true
   const result = await signInUser(user_email.value, user_password.value)
   if (result?.user) {
-    nextTick()
+    await nextTick()
     router.push('/watchlist')
+    loading.value = false
+    show_toast('Login successful', 'success')
     console.log('Signed in: ', result.user)
   } else {
+    show_toast('Invalid credentials', 'failed')
     console.error('Sign in failed')
+    loading.value = false
   }
 }
 </script>
@@ -43,9 +52,16 @@ const handleSignIn = async () => {
           </div>
           <button
             @click="handleSignIn"
+            v-if="loading == false"
             class="w-full px-5 p-3 bg-[#ffffff0d] border border-[#ffffff1a] rounded-3xl hover:bg-black/20"
           >
             Sign in
+          </button>
+          <button
+            class="w-full px-5 p-3 bg-[#ffffff0d] border border-[#ffffff1a] rounded-3xl hover:bg-black/20 flex items-center justify-center"
+            v-else
+          >
+            <LoadingIcon />
           </button>
           <button class="text-[#5a96f5] text-center" @click="switchAuthView">
             Not a user? Join us here

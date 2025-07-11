@@ -1,11 +1,30 @@
 <script setup>
-import { RouterView } from 'vue-router'
+import { RouterView, useRouter, useRoute } from 'vue-router'
 import { toastMessage, toastType } from '@/services/watchlistServices'
-import { checkSession } from '../src/services/authServices'
+import { userSession } from '../src/services/authServices'
+import { supabase } from '../src/services/supabaseClient'
 import { onMounted } from 'vue'
+import Toast from './components/Toast.vue'
 
-onMounted(() => {
-  checkSession()
+const router = useRouter()
+const route = useRoute()
+
+onMounted(async () => {
+  const { data, error } = await supabase.auth.getSession()
+  if (error) {
+    console.error('Session error:', error.message)
+    console.log('Session after reload', data.session)
+    return
+  }
+  userSession.value = data.session
+
+  // Auth state listener
+  supabase.auth.onAuthStateChange((_event, session) => {
+    userSession.value = session
+    if (!session && route.path === '/watchlist') {
+      router.push('/auth')
+    }
+  })
 })
 </script>
 
@@ -22,6 +41,7 @@ onMounted(() => {
   >
     {{ toastMessage }}
   </div>
+  <Toast />
   <RouterView />
 </template>
 

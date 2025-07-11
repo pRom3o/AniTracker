@@ -16,7 +16,8 @@ const handleSignOut = async () => {
     return
   }
   userSession.value = null
-  nextTick()
+
+  await nextTick()
   router.push('/auth')
 }
 </script>

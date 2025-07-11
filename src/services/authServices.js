@@ -38,24 +38,12 @@ export const signUpUser = async (email, password) => {
 // sign out function
 export const signOutUser = async () => {
   const { error } = await supabase.auth.signOut()
-  if (error) {
-    console.error('sign out failed: ', error.message)
-    return error
-  }
-  return null
+  user_email.value = ''
+  user_password.value = ''
+  return error
 }
 
 export const userSession = ref(null)
-export const checkSession = async () => {
-  const { data, error } = await supabase.auth.getSession()
-  if (error) {
-    console.error('Session error: ', error.message)
-    return
-  }
-  userSession.value = data.session
-}
-
-export const is_logged_in = ref(false)
 
 export const isDropdownOpen = ref(false)
 
