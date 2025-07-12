@@ -1,11 +1,12 @@
 import { ref } from 'vue'
 import { supabase } from './supabaseClient'
 
-export const user_email = ref('')
-export const user_password = ref('')
+export const user_email = ref('') // store user email
+export const user_password = ref('') // store password
 
-export const current_auth_view = ref('login')
+export const current_auth_view = ref('login') // set current auth view to login page
 
+// switch authView from signup to login and vice versa
 export const switchAuthView = () => {
   if (current_auth_view.value === 'signup') {
     current_auth_view.value = 'login'
@@ -13,6 +14,7 @@ export const switchAuthView = () => {
     current_auth_view.value = 'signup'
   }
 }
+
 // sign in function
 export const signInUser = async (email, password) => {
   try {
@@ -26,6 +28,7 @@ export const signInUser = async (email, password) => {
     }
   }
 }
+
 // sign up function
 export const signUpUser = async (email, password) => {
   const { data, error } = await supabase.auth.signUp({ email, password })
@@ -35,6 +38,7 @@ export const signUpUser = async (email, password) => {
   }
   return data
 }
+
 // sign out function
 export const signOutUser = async () => {
   const { error } = await supabase.auth.signOut()
@@ -43,10 +47,11 @@ export const signOutUser = async () => {
   return error
 }
 
-export const userSession = ref(null)
+export const userSession = ref(null) // store user session
 
-export const isDropdownOpen = ref(false)
+export const isDropdownOpen = ref(false) // track profile/logout dropdown
 
+// toggle dropdown show/hide
 export const toggleDropdown = () => {
   isDropdownOpen.value = !isDropdownOpen.value
 }

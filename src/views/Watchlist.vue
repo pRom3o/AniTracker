@@ -5,11 +5,11 @@ import { onMounted, computed } from 'vue'
 import {
   watchlist,
   removeFromWatchlist,
-  fetchData,
+  fetchSupabaseData,
   categories,
   open_menu_id,
   toggleMenu,
-  showSelect,
+  showUpdateModal,
   select_edit_id,
   is_data_fetched,
   closeMenu,
@@ -24,7 +24,7 @@ onMounted(() => {
     router.push('/auth')
   }
   if (watchlist.value.length == 0) {
-    fetchData()
+    fetchSupabaseData()
   }
 })
 
@@ -115,7 +115,7 @@ const arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
                         </button>
                         <button
                           class="w-full md:p-3 p-1 flex items-center justify-evenly md:text-sm text-xs cursor-pointer rounded-3xl hover:bg-black/30 mt-3 bg-black/50"
-                          @click="showSelect(anime.id)"
+                          @click="showUpdateModal(anime.id)"
                         >
                           Update category
                         </button>
@@ -199,7 +199,7 @@ const arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
                         </button>
                         <button
                           class="w-full md:p-3 p-1 flex items-center justify-evenly md:text-sm text-xs cursor-pointer rounded-3xl hover:bg-black/30 mt-3 bg-black/50"
-                          @click="showSelect(anime.id)"
+                          @click="showUpdateModal(anime.id)"
                         >
                           Update category
                         </button>
@@ -283,7 +283,7 @@ const arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
                         </button>
                         <button
                           class="w-full md:p-3 p-1 flex items-center justify-evenly md:text-sm text-xs cursor-pointer rounded-3xl hover:bg-black/30 mt-3 bg-black/50"
-                          @click="showSelect(anime.id)"
+                          @click="showUpdateModal(anime.id)"
                         >
                           Update category
                         </button>

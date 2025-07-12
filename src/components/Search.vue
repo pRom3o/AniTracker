@@ -7,11 +7,11 @@ import {
   isOpen,
   categories,
   searchbar,
-  anisearch,
-  mode,
+  animeSearch,
+  handleCategoryModal,
   animeName,
   selectedCategory,
-  add,
+  addAnime,
 } from '../services/watchlistServices'
 
 // reactive variable to hold the fetched anime data
@@ -48,7 +48,7 @@ const debounced = debounce(async function fetchanime() {
   <div
     class="w-full h-full flex justify-center md:px-4 backdrop-blur-md bg-black/30 fixed px-4"
     v-show="searchbar"
-    @click.self="anisearch()"
+    @click.self="animeSearch()"
   >
     <div
       class="lg:mt-62 mt-30 md:w-[70%] lg:w-[40%] lg:h-[50%] h-[70%] cards rounded-4xl flex flex-col items-center justify-between p-6 text-gray-300"
@@ -56,7 +56,7 @@ const debounced = debounce(async function fetchanime() {
       <div class="flex w-full space-x-2 md:py-4 mb-4 md:h-[15%] items-center">
         <button
           class="cursor-pointer p-3 rounded-full hover:bg-white/10 hover:border hover:border-[#333333]"
-          @click="anisearch"
+          @click="animeSearch"
         >
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
             <path
@@ -206,7 +206,7 @@ const debounced = debounce(async function fetchanime() {
                 </svg>
                 {{ anime.score }} - {{ anime.type }} - {{ anime.year }} - {{ anime.status }}
               </p>
-              <button class="hidden md:flex items-center cursor-pointer" @click="add(anime)">
+              <button class="hidden md:flex items-center cursor-pointer" @click="addAnime(anime)">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24">
                   <path
                     fill="#fff"
@@ -215,7 +215,10 @@ const debounced = debounce(async function fetchanime() {
                 </svg>
                 Add to watchlist
               </button>
-              <button class="md:hidden flex items-center cursor-pointer mx-2" @click="add(anime)">
+              <button
+                class="md:hidden flex items-center cursor-pointer mx-2"
+                @click="addAnime(anime)"
+              >
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24">
                   <path
                     fill="#fff"
@@ -233,7 +236,7 @@ const debounced = debounce(async function fetchanime() {
       ><div
         v-if="isOpen"
         class="flex items-center justify-center fixed inset-0 z-60 bg-black/20"
-        @click="mode()"
+        @click="handleCategoryModal()"
       >
         <div class="backdrop-blur-3xl h-full w-full flex items-center justify-center bg-black/10">
           <div class="h-full w-full flex items-center justify-center z-50 m-4">

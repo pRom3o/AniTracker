@@ -3,12 +3,13 @@
 import { nextTick } from 'vue'
 import { RouterLink } from 'vue-router'
 import Search from './Search.vue'
-import { searchbar, anisearch } from '../services/watchlistServices'
+import { searchbar, animeSearch } from '../services/watchlistServices'
 import { userSession, toggleDropdown, isDropdownOpen, signOutUser } from '../services/authServices'
 import router from '../router/index'
 import ProfileIcon from '/public/icons/ProfileIcon.vue'
 import LogoutIcon from '/public/icons/LogoutIcon.vue'
 
+// handle signout
 const handleSignOut = async () => {
   const { error } = await signOutUser()
   if (error) {
@@ -37,7 +38,7 @@ const handleSignOut = async () => {
       <button
         type="text"
         class="px-4 py-2 rounded-3xl text-center flex items-center cursor-pointer border border-[#333333]"
-        @click="anisearch"
+        @click="animeSearch"
       >
         Search
         <p class="ml-1">

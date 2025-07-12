@@ -5,7 +5,7 @@ export const watchlist = ref([]) // watchlist
 export const isOpen = ref(false) // ref to track category modal state
 export const isLoading = ref(false) // ref to track loading state
 export const searchbar = ref(false) // ref to track search modal state
-export const is_data_fetched = ref(false)
+export const is_data_fetched = ref(false) // to check is data is fetched from watchist
 
 // Toast
 export const toastMessage = ref('')
@@ -20,12 +20,12 @@ export const showToast = (message, type = 'success') => {
 }
 
 // switch category modal state
-export const mode = () => {
+export const handleCategoryModal = () => {
   isOpen.value = !isOpen.value
 }
 
 // toggle search modal
-export const anisearch = () => {
+export const animeSearch = () => {
   searchbar.value = !searchbar.value
 }
 
@@ -36,7 +36,7 @@ export const animeName = ref('')
 export const categories = ['Watched', 'Watching', 'Interested in']
 
 // Fetch existing watchlist items
-export const fetchData = async () => {
+export const fetchSupabaseData = async () => {
   const { data, error } = await supabase.from('anitracker_db').select('*')
   if (error) {
     console.error('Fetch error:', error)
@@ -56,14 +56,14 @@ export const selectedCategory = ref('')
 export const selectedAnime = ref({})
 
 // trigger category modal and save selected anime
-export const add = (anime) => {
-  mode()
+export const addAnime = (anime) => {
+  handleCategoryModal()
   selectedAnime.value = anime
 }
 
 // Async function to insert to supabase db
 export const addToWatchlist = async () => {
-  mode()
+  handleCategoryModal()
   const { data, error } = await supabase
     .from('anitracker_db')
     .insert([
@@ -81,7 +81,7 @@ export const addToWatchlist = async () => {
   } else {
     console.log('Inserted', data)
     showToast('Anime added successfully!', 'success')
-    fetchData()
+    fetchSupabaseData()
     selectedCategory.value = ''
     selectedAnime.value = {}
   }
@@ -96,7 +96,7 @@ export const removeFromWatchlist = async (id) => {
   } else {
     showToast('Deleted', 'error')
     console.log('deleted:', data)
-    fetchData() // refresh list
+    fetchSupabaseData() // refresh list
   }
 }
 
@@ -113,14 +113,14 @@ export const updateCategory = async (id, category) => {
   } else {
     showToast('category updated successfully!', 'success')
     console.log('Updated:', data)
-    fetchData() // refresh list
+    fetchSupabaseData() // refresh list
   }
 }
 
-// ellipson svg
 export const open_menu_id = ref(null) // track anime id whose ellipson was clicked
 export const select_edit_id = ref(null) // track anime id whose ellipson was clicked
 
+// ellipson svg to handle remove/update modal
 export const toggleMenu = (anime_id) => {
   if (open_menu_id.value === anime_id) {
     open_menu_id.value = null
@@ -129,15 +129,18 @@ export const toggleMenu = (anime_id) => {
   }
 }
 
-export const showSelect = (anime_id) => {
+// shwow update modal
+export const showUpdateModal = (anime_id) => {
   select_edit_id.value = select_edit_id.value === anime_id ? null : anime_id
 }
 
+// close update/remove modal
 export const closeMenu = () => {
   open_menu_id.value = null
   select_edit_id.value = null
 }
 
+// handle update category
 export const handleCategoryUpdate = (id, category) => {
   closeMenu()
   updateCategory(id, category)
