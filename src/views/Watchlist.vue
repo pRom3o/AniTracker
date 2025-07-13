@@ -22,8 +22,7 @@ import router from '../router/index'
 onMounted(() => {
   if (!userSession.value) {
     router.push('/auth')
-  }
-  if (watchlist.value.length == 0) {
+  } else {
     fetchSupabaseData()
   }
 })

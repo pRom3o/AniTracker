@@ -1,5 +1,6 @@
 import { ref } from 'vue'
 import { supabase } from './supabaseClient'
+import { user_email } from './authServices'
 
 export const watchlist = ref([]) // watchlist
 export const isOpen = ref(false) // ref to track category modal state
@@ -73,6 +74,7 @@ export const addToWatchlist = async () => {
         image_url: selectedAnime.value.images.jpg.image_url,
         rating: selectedAnime.value.score,
         episodes: selectedAnime.value.episodes,
+        user_email: user_email.value,
       },
     ])
     .select('*')

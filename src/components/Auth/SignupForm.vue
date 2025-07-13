@@ -1,15 +1,24 @@
 <script setup>
 import { user_email, user_password, switchAuthView, signUpUser } from '@/services/authServices.js'
 import router from '../../router/index'
+import LoadingIcon from '/public/icons/LoadingIcon.vue'
+import { show_toast } from '../../services/toastServices'
+import { ref } from 'vue'
+
+const loading = ref(false)
 
 const handleSignUp = async () => {
+  loading.value = true
   const result = await signUpUser(user_email.value, user_password.value)
   if (result?.user) {
     console.log('sign up complete: ', result.user)
     router.push('/')
+    show_toast('Signup success', 'success')
+    loading.value = false
     user_email.value = ''
     user_password.value = ''
   } else if (result?.message) {
+    show_toast('Signup failed', 'failed')
     console.error('Sign up failed: ', result.message)
   } else {
     console.error('Unknown sign up error')
@@ -45,9 +54,17 @@ const handleSignUp = async () => {
           </div>
           <button
             @click="handleSignUp"
+            v-if="loading == false"
             class="w-full px-5 p-3 bg-[#ffffff0d] border border-[#ffffff1a] rounded-3xl hover:bg-black/20"
           >
             Create account
+          </button>
+          <button
+            @click="handleSignUp"
+            v-else
+            class="w-full px-5 p-3 bg-[#ffffff0d] border border-[#ffffff1a] rounded-3xl hover:bg-black/20"
+          >
+            <LoadingIcon />
           </button>
           <button class="text-[#5a96f5] text-center" @click="switchAuthView">
             Already a user? Login here

@@ -15,7 +15,7 @@ const handleSignIn = async () => {
     router.push('/watchlist')
     loading.value = false
     show_toast('Login successful', 'success')
-    console.log('Signed in: ', result.user)
+    console.log('logged in: ', result.user)
   } else {
     show_toast('Invalid credentials', 'failed')
     console.error('Sign in failed')

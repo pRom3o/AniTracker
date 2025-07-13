@@ -1,6 +1,6 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <script setup>
-import { nextTick } from 'vue'
+import { nextTick, onMounted, ref, onBeforeUnmount } from 'vue'
 import { RouterLink } from 'vue-router'
 import Search from './Search.vue'
 import { searchbar, animeSearch } from '../services/watchlistServices'
@@ -8,6 +8,28 @@ import { userSession, toggleDropdown, isDropdownOpen, signOutUser } from '../ser
 import router from '../router/index'
 import ProfileIcon from '/public/icons/ProfileIcon.vue'
 import LogoutIcon from '/public/icons/LogoutIcon.vue'
+
+const dropDownRef = ref(null)
+const profileButtonRef = ref(null)
+
+const handleClickOutside = (event) => {
+  if (
+    dropDownRef.value &&
+    !dropDownRef.value.contains(event.target) &&
+    profileButtonRef.value &&
+    !profileButtonRef.value.contains(event.target)
+  ) {
+    isDropdownOpen.value = false
+  }
+}
+
+onMounted(() => {
+  document.addEventListener('click', handleClickOutside)
+})
+
+onBeforeUnmount(() => {
+  document.removeEventListener('click', handleClickOutside)
+})
 
 // handle signout
 const handleSignOut = async () => {
@@ -26,7 +48,6 @@ const handleSignOut = async () => {
 <template>
   <div
     class="max-w-full rounded-full backdrop-blur-md overlay p-2 md:m-2 flex items-center justify-between fixed left-1 right-1 top-2 z-2 text-gray-300"
-    @click.self="toggleDropdown"
   >
     <p class="text-center p-4 rounded-full hover:backdrop-blur-lg hidden md:flex">
       <RouterLink to="/" class="logo">AniTracker</RouterLink>
@@ -61,7 +82,7 @@ const handleSignOut = async () => {
     </div>
     <div class="md:min-w-[5%] flex justify-center p-2 hover:backdrop-blur-lg rounded-full relative">
       <div v-if="userSession" class="flex items-center justify-center">
-        <button @click="toggleDropdown">
+        <button @click="toggleDropdown" ref="profileButtonRef">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
             <path
               fill="currentColor"
@@ -73,6 +94,7 @@ const handleSignOut = async () => {
           ><div
             class="absolute top-14 -left-[70%] min-h-36 w-36 background rounded-3xl space-y-5 p-4 flex flex-col items-center justify-evenly"
             v-if="isDropdownOpen"
+            ref="dropDownRef"
           >
             <button
               class="w-full px-5 p-3 bg-[#ffffff0d] border border-[#ffffff1a] rounded-3xl hover:bg-black/20 flex items-center justify-evenly space-x-1"

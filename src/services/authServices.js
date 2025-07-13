@@ -54,4 +54,7 @@ export const isDropdownOpen = ref(false) // track profile/logout dropdown
 // toggle dropdown show/hide
 export const toggleDropdown = () => {
   isDropdownOpen.value = !isDropdownOpen.value
+  setTimeout(() => {
+    isDropdownOpen.value = false
+  }, 5000)
 }
