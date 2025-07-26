@@ -23,6 +23,13 @@ const router = createRouter({
       path: '/profile',
       name: 'Profile',
       component: () => import('../views/ProfileView.vue'),
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/settings',
+      name: 'Settings',
+      component: () => import('../views/SettingsView.vue'),
+      meta: { requiresAuth: true },
     },
     {
       path: '/auth',
@@ -41,5 +48,4 @@ router.beforeEach(async (to, from, next) => {
     next()
   }
 })
-
 export default router

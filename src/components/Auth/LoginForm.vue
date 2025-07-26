@@ -10,12 +10,12 @@ const loading = ref(false)
 const handleSignIn = async () => {
   loading.value = true
   const result = await signInUser(user_email.value, user_password.value)
+  console.log(result)
   if (result?.user) {
     await nextTick()
     router.push('/watchlist')
     loading.value = false
     show_toast('Login successful', 'success')
-    console.log('logged in: ', result.user)
   } else {
     show_toast('Invalid credentials', 'failed')
     console.error('Sign in failed')

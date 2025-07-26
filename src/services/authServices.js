@@ -54,7 +54,25 @@ export const isDropdownOpen = ref(false) // track profile/logout dropdown
 // toggle dropdown show/hide
 export const toggleDropdown = () => {
   isDropdownOpen.value = !isDropdownOpen.value
-  setTimeout(() => {
-    isDropdownOpen.value = false
-  }, 5000)
+}
+
+export const logging_out = ref(false)
+
+export async function getUser() {
+  const response = await supabase.auth.getUser()
+
+  if (response.error) {
+    throw response.error
+  }
+
+  return response.data.user
+}
+
+export async function logout() {
+  const { error } = await supabase.auth.signOut()
+  if (error) {
+    console.error('Logout error:', error.message)
+    return false
+  }
+  return true
 }

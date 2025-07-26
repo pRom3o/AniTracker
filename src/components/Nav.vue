@@ -5,7 +5,8 @@ import { RouterLink } from 'vue-router'
 import Search from './Search.vue'
 import { searchbar, animeSearch } from '../services/watchlistServices'
 import { userSession, toggleDropdown, isDropdownOpen, signOutUser } from '../services/authServices'
-import router from '../router/index'
+import { useRouter } from 'vue-router'
+
 import ProfileIcon from '/public/icons/ProfileIcon.vue'
 import LogoutIcon from '/public/icons/LogoutIcon.vue'
 
@@ -31,6 +32,7 @@ onBeforeUnmount(() => {
   document.removeEventListener('click', handleClickOutside)
 })
 
+const router = useRouter()
 // handle signout
 const handleSignOut = async () => {
   const { error } = await signOutUser()
@@ -82,17 +84,10 @@ const handleSignOut = async () => {
     </div>
     <div class="md:min-w-[5%] flex justify-center p-2 hover:backdrop-blur-lg rounded-full relative">
       <div v-if="userSession" class="flex items-center justify-center">
-        <button @click="toggleDropdown" ref="profileButtonRef">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-            <path
-              fill="currentColor"
-              d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2m0 4c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6m0 14c-2.03 0-4.43-.82-6.14-2.88a9.95 9.95 0 0 1 12.28 0C16.43 19.18 14.03 20 12 20"
-            />
-          </svg>
-        </button>
+        <button @click="toggleDropdown" ref="profileButtonRef"><ProfileIcon /></button>
         <Transition name="search"
           ><div
-            class="absolute top-14 -left-[70%] min-h-36 w-36 background rounded-3xl space-y-5 p-4 flex flex-col items-center justify-evenly"
+            class="absolute top-14 md:-left-[70%] right-0 min-h-36 w-36 background rounded-3xl space-y-5 p-4 flex flex-col items-center justify-evenly"
             v-if="isDropdownOpen"
             ref="dropDownRef"
           >
