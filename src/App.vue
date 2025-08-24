@@ -1,7 +1,6 @@
 <script setup>
 import { RouterView, useRouter, useRoute } from 'vue-router'
 import { toastMessage, toastType } from '@/services/watchlistServices'
-import { userSession } from '../src/services/authServices'
 import { supabase } from '../src/services/supabaseClient'
 import { onMounted } from 'vue'
 import Toast from './components/Toast.vue'
@@ -16,11 +15,10 @@ onMounted(async () => {
     console.log('Session after reload', data.session)
     return
   }
-  userSession.value = data.session
+  console.log('data', data)
 
   // Auth state listener
   supabase.auth.onAuthStateChange((_event, session) => {
-    userSession.value = session
     if (!session && route.path === '/watchlist') {
       router.push('/auth')
     }

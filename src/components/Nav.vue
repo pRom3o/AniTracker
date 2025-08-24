@@ -4,7 +4,7 @@ import { nextTick, onMounted, ref, onBeforeUnmount } from 'vue'
 import { RouterLink } from 'vue-router'
 import Search from './Search.vue'
 import { searchbar, animeSearch } from '../services/watchlistServices'
-import { userSession, toggleDropdown, isDropdownOpen, signOutUser } from '../services/authServices'
+import { toggleDropdown, isDropdownOpen, signOutUser } from '../services/authServices'
 import { useRouter } from 'vue-router'
 
 import ProfileIcon from '/public/icons/ProfileIcon.vue'
@@ -40,7 +40,6 @@ const handleSignOut = async () => {
     console.error('Sign out error: ', error.message)
     return
   }
-  userSession.value = null
 
   await nextTick()
   router.push('/auth')
@@ -82,7 +81,7 @@ const handleSignOut = async () => {
         <RouterLink to="/watchlist">Watchlist</RouterLink>
       </li>
     </div>
-    <div class="md:min-w-[5%] flex justify-center p-2 hover:backdrop-blur-lg rounded-full relative">
+    <!-- <div class="md:min-w-[5%] flex justify-center p-2 hover:backdrop-blur-lg rounded-full relative">
       <div v-if="userSession" class="flex items-center justify-center">
         <button @click="toggleDropdown" ref="profileButtonRef"><ProfileIcon /></button>
         <Transition name="search"
@@ -108,7 +107,7 @@ const handleSignOut = async () => {
       <div class="md:w-[5%] flex justify-center p-2 hover:backdrop-blur-lg rounded-full" v-else>
         <RouterLink to="/auth">Login/Signup</RouterLink>
       </div>
-    </div>
+    </div> -->
   </div>
   <Transition name="search">
     <Search v-if="searchbar" class="z-50" />

@@ -2,18 +2,11 @@
 import LeftarrowIcon from '/public/icons/LeftarrowIcon.vue'
 import SettingsIcon from '/public/icons/SettingsIcon.vue'
 
-import {
-  userSession,
-  logging_out,
-  getUser,
-  logout,
-  user_email,
-  user_password,
-} from '../services/authServices'
-import { watchlist } from '../services/watchlistServices'
+import { logging_out, getUser, logout, user_email, user_password } from '../services/authServices'
+// import { watchlist } from '../services/watchlistServices'
 import LogoutIcon from '/public/icons/LogoutIcon.vue'
 import LoadingIcon from '/public/icons/LoadingIcon.vue'
-import { onMounted, ref, computed } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import editIcon from '/public/icons/editIcon.vue'
 import {
@@ -23,13 +16,12 @@ import {
   getWatchlistItems,
 } from '../services/profileServices'
 import editAvatarModal from '../components/Profile/editAvatarModal.vue'
-import { name, bio } from '../services/settingsServices'
 
-const total_anime = computed(() => watchlist.value.length)
+const total_anime = ref(0)
 const router = useRouter()
 
 const goBack = () => {
-  router.back()
+  router.push('/')
 }
 
 const handleLogout = async () => {
@@ -39,7 +31,6 @@ const handleLogout = async () => {
     router.push('/auth') // Redirect after logout
     user_email.value = ''
     user_password.value = ''
-    userSession.value = null
     logging_out.value = false
   } else {
     alert('Logout failed.')
@@ -50,15 +41,26 @@ const email = ref('')
 const watched = ref(0)
 const watching = ref(0)
 const interested = ref(0)
+const name = ref('')
+const bio = ref('')
 
 onMounted(async () => {
-  const user = await getUser()
-
+  // const { user } = await getUser(userSession.user.id)
+  const user = null
+  if (user) {
+    console.log(user)
+  }
   const list = await getWatchlistItems(user.id)
   watched.value = list.watched
   watching.value = list.watching
   interested.value = list.interested
+  total_anime.value = watched.value.length + watching.value.length + interested.value.length
   email.value = user.email
+
+  // const profile = await getProfile(user.id)
+
+  // name.value = profile.name
+  // bio.value = profile.bio
 })
 </script>
 

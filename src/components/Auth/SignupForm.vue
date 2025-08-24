@@ -1,27 +1,31 @@
 <script setup>
 import { user_email, user_password, switchAuthView, signUpUser } from '@/services/authServices.js'
-import router from '../../router/index'
+
 import LoadingIcon from '/public/icons/LoadingIcon.vue'
 import { show_toast } from '../../services/toastServices'
+
 import { ref } from 'vue'
 
 const loading = ref(false)
 
 const handleSignUp = async () => {
   loading.value = true
-  const result = await signUpUser(user_email.value, user_password.value)
-  if (result?.user) {
-    console.log('sign up complete: ', result.user)
-    router.push('/')
-    show_toast('Signup success', 'success')
+  console.log('signing up')
+  try {
+    const { data } = await signUpUser(user_email.value, user_password.value)
+    if (data) {
+      console.log('sign up complete: ', data.user.email)
+      loading.value = false
+      user_email.value = ''
+      user_password.value = ''
+
+      show_toast('Signup success, check email for confirmation message', 'success')
+    }
+  } catch (err) {
+    show_toast(err.message || 'Signup failed', 'failed')
+    console.error('Sign up failed: ', err.message)
+  } finally {
     loading.value = false
-    user_email.value = ''
-    user_password.value = ''
-  } else if (result?.message) {
-    show_toast('Signup failed', 'failed')
-    console.error('Sign up failed: ', result.message)
-  } else {
-    console.error('Unknown sign up error')
   }
 }
 </script>
@@ -62,7 +66,7 @@ const handleSignUp = async () => {
           <button
             @click="handleSignUp"
             v-else
-            class="w-full px-5 p-3 bg-[#ffffff0d] border border-[#ffffff1a] rounded-3xl hover:bg-black/20"
+            class="flex items-center justify-center w-full px-5 p-3 bg-[#ffffff0d] border border-[#ffffff1a] rounded-3xl hover:bg-black/20"
           >
             <LoadingIcon />
           </button>

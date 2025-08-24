@@ -1,13 +1,12 @@
 import { ref } from 'vue'
-import { userSession } from './authServices'
+// import { userSession } from './authServices'
 export const edit_avatar = ref(false)
+import { supabase } from './supabaseClient'
 
 export const edit_avatar_modal = () => {
   edit_avatar.value = !edit_avatar.value
   console.log(edit_avatar.value)
 }
-
-import { supabase } from './supabaseClient'
 
 export const uploadAvatar = async (file, userId) => {
   const fileExt = file.name.split('.').pop()
@@ -51,7 +50,7 @@ export const uploadAvatarNow = async () => {
     return
   }
 
-  const userId = userSession.value?.user?.id
+  // const userId = userSession.value?.user?.id
   const file = selectedFile.value
 
   const fileExt = file.name.split('.').pop()
@@ -88,4 +87,13 @@ export async function getWatchlistItems(user_Id) {
   const interested = data.filter((item) => item.status === 'Interested in')
 
   return { watched: watched, watching: watching, interested: interested }
+}
+
+export async function getProfile(user_Id) {
+  const { data, error } = await supabase.from('profiles').select('*').eq('id', user_Id)
+
+  if (error) throw error
+
+  console.log(data)
+  return data
 }

@@ -17,25 +17,25 @@ export const switchAuthView = () => {
 
 // sign in function
 export const signInUser = async (email, password) => {
-  try {
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password })
-    if (error) throw error
-    return data
-  } catch (error) {
-    if (error) {
-      console.error('Sign in error: ', error.message)
-      return error
-    }
-  }
+  const { data, error } = await supabase.auth.signInWithPassword({ email, password })
+
+  if (error) throw error
+
+  return { user: data.user, session: data.session }
 }
 
 // sign up function
 export const signUpUser = async (email, password) => {
-  const { data, error } = await supabase.auth.signUp({ email, password })
-  if (error) {
-    console.error('Signup error: ', error.message)
-    return error
-  }
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: {
+      emailRedirectTo: `${window.location.origin}/profile`,
+    },
+  })
+
+  if (error) throw error
+
   return data
 }
 
@@ -47,8 +47,6 @@ export const signOutUser = async () => {
   return error
 }
 
-export const userSession = ref(null) // store user session
-
 export const isDropdownOpen = ref(false) // track profile/logout dropdown
 
 // toggle dropdown show/hide
@@ -58,14 +56,17 @@ export const toggleDropdown = () => {
 
 export const logging_out = ref(false)
 
-export async function getUser() {
-  const response = await supabase.auth.getUser()
+export async function getUser(user_id) {
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUserById(user_id)
 
-  if (response.error) {
-    throw response.error
+  if (error) {
+    throw error
   }
 
-  return response.data.user
+  return user
 }
 
 export async function logout() {
@@ -75,4 +76,15 @@ export async function logout() {
     return false
   }
   return true
+}
+
+export async function initAuth() {
+  const { data, error } = await supabase.auth.getSession()
+  if (error) {
+    console.log('Error fetching session', error.message)
+    return
+  }
+  if (data.session) {
+    console.log('Active session: ', data.session)
+  }
 }

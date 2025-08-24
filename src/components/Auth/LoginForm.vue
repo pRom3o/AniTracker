@@ -1,27 +1,45 @@
 <script setup>
+import { onMounted, ref } from 'vue'
 import { user_email, user_password, switchAuthView, signInUser } from '@/services/authServices'
-import router from '../../router/index'
-import { nextTick, ref } from 'vue'
+import { useRouter } from 'vue-router'
 import LoadingIcon from '/public/icons/LoadingIcon.vue'
 import { show_toast } from '../../services/toastServices'
+import { supabase } from '../../services/supabaseClient'
 
 const loading = ref(false)
+const router = useRouter()
 
 const handleSignIn = async () => {
   loading.value = true
-  const result = await signInUser(user_email.value, user_password.value)
-  console.log(result)
-  if (result?.user) {
-    await nextTick()
-    router.push('/watchlist')
+  try {
+    console.log('before await')
+    const { user, session } = await signInUser(user_email.value, user_password.value)
+
+    if (session?.user) {
+      console.log('after await')
+      console.log('signing in as', user.email)
+      console.log('active session', session)
+      show_toast('Signin success', 'success')
+      router.push('/profile')
+    }
+  } catch (error) {
+    console.error(error.message || 'Sign in failed')
+    console.error('Sign in failed', error.message)
     loading.value = false
-    show_toast('Login successful', 'success')
-  } else {
-    show_toast('Invalid credentials', 'failed')
-    console.error('Sign in failed')
+  } finally {
     loading.value = false
   }
 }
+
+onMounted(async () => {
+  const { data, error } = await supabase.auth.getSession()
+  if (error) {
+    console.error('Session error:', error.message)
+    console.log('Session after reload', data.session)
+    return
+  }
+  console.log('data', data)
+})
 </script>
 
 <template>
@@ -51,7 +69,7 @@ const handleSignIn = async () => {
             />
           </div>
           <button
-            @click="handleSignIn"
+            @click="handleSignIn()"
             v-if="loading == false"
             class="w-full px-5 p-3 bg-[#ffffff0d] border border-[#ffffff1a] rounded-3xl hover:bg-black/20"
           >

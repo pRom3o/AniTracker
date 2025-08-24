@@ -1,11 +1,10 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <script setup>
 import Nav from '../components/Nav.vue'
-import { onMounted, computed } from 'vue'
+import { computed } from 'vue'
 import {
   watchlist,
   removeFromWatchlist,
-  fetchSupabaseData,
   categories,
   open_menu_id,
   toggleMenu,
@@ -16,16 +15,6 @@ import {
   handleCategoryUpdate,
 } from '../services/watchlistServices'
 import EllipsisIcon from '../../public/icons/ellipsisIcon.vue'
-import { userSession } from '../services/authServices'
-import router from '../router/index'
-
-onMounted(() => {
-  if (!userSession.value) {
-    router.push('/auth')
-  } else {
-    fetchSupabaseData()
-  }
-})
 
 // array to store watched animes
 const watchedList = computed(() => watchlist.value.filter((anime) => anime.status === 'Watched'))
