@@ -1,1 +1,13 @@
 @import 'tailwindcss';
+
+@theme {
+  --font-kanit: Kanit, sans-serif;
+}
+
+.spinner {
+  @apply w-10 h-10 border-4 border-white/20 border-t-transparent rounded-full animate-spin;
+}
+
+.center {
+  @apply flex items-center justify-center;
+}

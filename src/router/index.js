@@ -1,8 +1,10 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import AuthView from '../views/AuthView.vue'
-// import { supabase } from '../services/supabaseClient'
+// import { supabase } from '../lib/supabaseClient'
+import { inject } from 'vue'
 
+const auth = inject('auth')
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -38,21 +40,8 @@ const router = createRouter({
   ],
 })
 
-// router.beforeEach(async (to, from, next) => {
-//   const { data } = await supabase.auth.getSession()
-//   userSession.value = data.session
-//   console.log(to.fullPath, userSession.value)
-//   if (to.meta.requiresAuth && !userSession.value) {
-//     next('/auth')
-//   } else {
-//     next()
-//   }
-// })
-
 router.beforeEach((to, from, next) => {
-  const isLoggedIn = false
-
-  if (!isLoggedIn && to.meta.requiresAuth) {
+  if (auth && !auth.user && to.meta.requiresAuth) {
     next('/auth')
   } else {
     next()

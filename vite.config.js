@@ -10,7 +10,13 @@ import { VitePWA } from 'vite-plugin-pwa'
 export default defineConfig({
   base: '/',
   plugins: [
-    vue(),
+    vue({
+      template: {
+        compilerOptions: {
+          isCustomElement: (tag) => ['md-linedivider'].includes(tag),
+        },
+      },
+    }),
     VitePWA({
       registerType: 'autoUpdate',
       manifest: {

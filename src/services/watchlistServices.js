@@ -1,5 +1,5 @@
 import { ref } from 'vue'
-import { supabase } from './supabaseClient'
+import { supabase } from '../lib/supabaseClient'
 import { getUser, user_email } from './authServices'
 
 export const watchlist = ref([]) // watchlist

@@ -1,7 +1,7 @@
 import { ref } from 'vue'
+import { supabase } from '../lib/supabaseClient'
 // import { userSession } from './authServices'
 export const edit_avatar = ref(false)
-import { supabase } from './supabaseClient'
 
 export const edit_avatar_modal = () => {
   edit_avatar.value = !edit_avatar.value

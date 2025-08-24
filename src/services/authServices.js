@@ -1,5 +1,5 @@
 import { ref } from 'vue'
-import { supabase } from './supabaseClient'
+import { supabase } from '../lib/supabaseClient'
 
 export const user_email = ref('') // store user email
 export const user_password = ref('') // store password
@@ -15,13 +15,12 @@ export const switchAuthView = () => {
   }
 }
 
-// sign in function
 export const signInUser = async (email, password) => {
-  const { data, error } = await supabase.auth.signInWithPassword({ email, password })
-
-  if (error) throw error
-
-  return { user: data.user, session: data.session }
+  const { error } = await supabase.auth.signInWithPassword({
+    email,
+    password,
+  })
+  return { error }
 }
 
 // sign up function
