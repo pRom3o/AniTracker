@@ -1,4 +1,4 @@
-export function checkIfUserIsLoggedIn() {
-  if (sessionStorage.getItem('token')) {
-  }
-}
+// export function checkIfUserIsLoggedIn() {
+//   if (sessionStorage.getItem('token')) {
+//   }
+// }

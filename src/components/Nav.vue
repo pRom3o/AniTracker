@@ -1,6 +1,6 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <script setup>
-import { nextTick, onMounted, ref, onBeforeUnmount } from 'vue'
+import { nextTick, onMounted, ref, onBeforeUnmount, inject } from 'vue'
 import { RouterLink } from 'vue-router'
 import Search from './Search.vue'
 import { searchbar, animeSearch } from '../services/watchlistServices'
@@ -12,6 +12,9 @@ import LogoutIcon from '/public/icons/LogoutIcon.vue'
 
 const dropDownRef = ref(null)
 const profileButtonRef = ref(null)
+
+const auth = inject('auth')
+const user = ref({})
 
 const handleClickOutside = (event) => {
   if (
@@ -25,6 +28,7 @@ const handleClickOutside = (event) => {
 }
 
 onMounted(() => {
+  user.value = auth.user
   document.addEventListener('click', handleClickOutside)
 })
 
@@ -81,8 +85,8 @@ const handleSignOut = async () => {
         <RouterLink to="/watchlist">Watchlist</RouterLink>
       </li>
     </div>
-    <!-- <div class="md:min-w-[5%] flex justify-center p-2 hover:backdrop-blur-lg rounded-full relative">
-      <div v-if="userSession" class="flex items-center justify-center">
+    <div class="md:min-w-[5%] flex justify-center p-2 hover:backdrop-blur-lg rounded-full relative">
+      <div v-if="user" class="flex items-center justify-center">
         <button @click="toggleDropdown" ref="profileButtonRef"><ProfileIcon /></button>
         <Transition name="search"
           ><div
@@ -107,7 +111,7 @@ const handleSignOut = async () => {
       <div class="md:w-[5%] flex justify-center p-2 hover:backdrop-blur-lg rounded-full" v-else>
         <RouterLink to="/auth">Login/Signup</RouterLink>
       </div>
-    </div> -->
+    </div>
   </div>
   <Transition name="search">
     <Search v-if="searchbar" class="z-50" />

@@ -1,7 +1,7 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <script setup>
 import Nav from '../components/Nav.vue'
-import { computed } from 'vue'
+
 import {
   watchlist,
   removeFromWatchlist,
@@ -15,19 +15,12 @@ import {
   handleCategoryUpdate,
 } from '../services/watchlistServices'
 import EllipsisIcon from '../../public/icons/ellipsisIcon.vue'
+import { getUser } from '../services/authServices'
+import { onMounted } from 'vue'
 
-// array to store watched animes
-const watchedList = computed(() => watchlist.value.filter((anime) => anime.status === 'Watched'))
-
-// array to store Currently watching animes
-const watchingList = computed(() => watchlist.value.filter((anime) => anime.status === 'Watching'))
-
-// array to store Interested in animes
-const interestedInList = computed(() =>
-  watchlist.value.filter((anime) => anime.status === 'Interested in'),
-)
-
-const arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
+onMounted(() => {
+  getUser()
+})
 </script>
 
 <template>

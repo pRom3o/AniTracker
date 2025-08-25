@@ -1,5 +1,5 @@
 <script setup>
-import { user_email, user_password, switchAuthView, signUpUser } from '@/services/authServices.js'
+import { user_email, user_password, signUpUser } from '@/services/authServices.js'
 
 import LoadingIcon from '/public/icons/LoadingIcon.vue'
 import { show_toast } from '../../services/toastServices'
@@ -70,7 +70,7 @@ const handleSignUp = async () => {
           >
             <LoadingIcon />
           </button>
-          <button class="text-[#5a96f5] text-center" @click="switchAuthView">
+          <button class="text-[#5a96f5] text-center" @click="switchAuthView('login')">
             Already a user? Login here
           </button>
         </div>

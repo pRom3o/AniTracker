@@ -4,17 +4,6 @@ import { supabase } from '../lib/supabaseClient'
 export const user_email = ref('') // store user email
 export const user_password = ref('') // store password
 
-export const current_auth_view = ref('login') // set current auth view to login page
-
-// switch authView from signup to login and vice versa
-export const switchAuthView = () => {
-  if (current_auth_view.value === 'signup') {
-    current_auth_view.value = 'login'
-  } else {
-    current_auth_view.value = 'signup'
-  }
-}
-
 export const signInUser = async (email, password) => {
   const { error } = await supabase.auth.signInWithPassword({
     email,
@@ -55,17 +44,17 @@ export const toggleDropdown = () => {
 
 export const logging_out = ref(false)
 
-export async function getUser(user_id) {
+export async function getUser() {
   const {
     data: { user },
     error,
-  } = await supabase.auth.getUserById(user_id)
-
-  if (error) {
-    throw error
+  } = await supabase.auth.getUser()
+  if (user) {
+    console.log('Logged-in user:', user)
+    return user
+  } else if (error) {
+    console.error('Error getting user:', error.message)
   }
-
-  return user
 }
 
 export async function logout() {
@@ -86,4 +75,5 @@ export async function initAuth() {
   if (data.session) {
     console.log('Active session: ', data.session)
   }
+  return data
 }
