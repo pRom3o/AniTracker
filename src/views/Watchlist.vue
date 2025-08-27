@@ -4,31 +4,28 @@ import Nav from '../components/Nav.vue'
 
 import {
   watchlist,
+  watched,
+  watching,
+  interested,
   removeFromWatchlist,
-  categories,
+  status,
   open_menu_id,
   toggleMenu,
   showUpdateModal,
   select_edit_id,
   is_data_fetched,
   closeMenu,
-  handleCategoryUpdate,
+  handlestatusUpdate,
   fetchSupabaseData,
 } from '../services/watchlistServices'
 import EllipsisIcon from '../../public/icons/ellipsisIcon.vue'
 import { getUser } from '../services/authServices'
-import { onMounted, ref } from 'vue'
-const watched = ref([])
-const watching = ref([])
-const interested = ref([])
+import { onMounted } from 'vue'
 
-const arr = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+const arr = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
 onMounted(() => {
   fetchSupabaseData()
   getUser()
-  watched.value = watchlist['Watched']
-  watching.value = watchlist['Watching']
-  interested.value = watchlist['Interested in']
 })
 </script>
 
@@ -107,7 +104,7 @@ onMounted(() => {
                           class="w-full md:p-3 p-1 flex items-center justify-evenly md:text-sm text-xs cursor-pointer rounded-3xl hover:bg-black/30 mt-3 bg-black/50"
                           @click="showUpdateModal(anime.id)"
                         >
-                          Update category
+                          Update status
                         </button>
                         <Transition name="category-dropdown"
                           ><div
@@ -119,9 +116,9 @@ onMounted(() => {
                               class="backdrop-blur-xl w-full rounded-3xl flex flex-col items-center justify-center p-2 space-y-5"
                             >
                               <button
-                                v-for="category in categories"
+                                v-for="category in status"
                                 :key="category"
-                                @click="handleCategoryUpdate(anime.id, category)"
+                                @click="handlestatusUpdate(anime.id, category)"
                                 class="w-full p-2 items-center justify-around cursor-pointer md:text-sm text-[10px] flex rounded-3xl border border-gray-500 bg-gray-400/20 hover:bg-gray-400/40"
                               >
                                 {{ category }}
@@ -191,7 +188,7 @@ onMounted(() => {
                           class="w-full md:p-3 p-1 flex items-center justify-evenly md:text-sm text-xs cursor-pointer rounded-3xl hover:bg-black/30 mt-3 bg-black/50"
                           @click="showUpdateModal(anime.id)"
                         >
-                          Update category
+                          Update status
                         </button>
                         <Transition name="category-dropdown"
                           ><div
@@ -203,9 +200,9 @@ onMounted(() => {
                               class="backdrop-blur-xl w-full rounded-3xl flex flex-col items-center justify-center p-2 space-y-5"
                             >
                               <button
-                                v-for="category in categories"
+                                v-for="category in status"
                                 :key="category"
-                                @click="handleCategoryUpdate(anime.id, category)"
+                                @click="handlestatusUpdate(anime.id, category)"
                                 class="w-full p-2 items-center justify-around cursor-pointer md:text-sm text-[10px] flex rounded-3xl border border-gray-500 bg-gray-400/20 hover:bg-gray-400/40"
                               >
                                 {{ category }}
@@ -275,7 +272,7 @@ onMounted(() => {
                           class="w-full md:p-3 p-1 flex items-center justify-evenly md:text-sm text-xs cursor-pointer rounded-3xl hover:bg-black/30 mt-3 bg-black/50"
                           @click="showUpdateModal(anime.id)"
                         >
-                          Update category
+                          Update status
                         </button>
                         <Transition name="category-dropdown"
                           ><div
@@ -287,9 +284,9 @@ onMounted(() => {
                               class="backdrop-blur-xl w-full rounded-3xl flex flex-col items-center justify-center p-2 space-y-5"
                             >
                               <button
-                                v-for="category in categories"
+                                v-for="category in status"
                                 :key="category"
-                                @click="handleCategoryUpdate(anime.id, category)"
+                                @click="handlestatusUpdate(anime.id, category)"
                                 class="w-full p-2 items-center justify-around cursor-pointer md:text-sm text-[10px] flex rounded-3xl border border-gray-500 bg-gray-400/20 hover:bg-gray-400/40"
                               >
                                 {{ category }}

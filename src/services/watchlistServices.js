@@ -1,4 +1,4 @@
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { supabase } from '../lib/supabaseClient'
 import { getUser, user_email } from './authServices'
 
@@ -34,7 +34,7 @@ export const animeSearch = () => {
 export const animeName = ref('')
 
 // categories array
-export const categories = ['Watched', 'Watching', 'Interested in']
+export const status = ['Watched', 'Watching', 'Interested in']
 
 // Fetch existing watchlist items
 export const fetchSupabaseData = async () => {
@@ -45,14 +45,21 @@ export const fetchSupabaseData = async () => {
     is_data_fetched.value = false
     setTimeout(() => {
       watchlist.value = data
+
       is_data_fetched.value = true
+
       console.log('fetched', watchlist.value)
     }, 500)
   }
 }
 
+export const watched = computed(() => watchlist.value.filter((item) => item.status === 'Watched'))
+export const watching = computed(() => watchlist.value.filter((item) => item.status === 'Watching'))
+export const interested = computed(() =>
+  watchlist.value.filter((item) => item.status === 'Interested in'),
+)
 // store category/status
-export const selectedCategory = ref('')
+export const selectedStatus = ref('')
 
 // store selected anime from search list
 export const selectedAnime = ref({})
@@ -71,7 +78,7 @@ export const addToWatchlist = async () => {
     .insert([
       {
         title: selectedAnime.value.title_english || selectedAnime.value.title,
-        status: selectedCategory.value,
+        status: selectedStatus.value,
         image_url: selectedAnime.value.images.jpg.image_url,
         rating: selectedAnime.value.score,
         episodes: selectedAnime.value.episodes,
@@ -86,7 +93,7 @@ export const addToWatchlist = async () => {
     console.log('Inserted', data)
     showToast('Anime added successfully!', 'success')
     fetchSupabaseData()
-    selectedCategory.value = ''
+    selectedStatus.value = ''
     selectedAnime.value = {}
   }
 }
@@ -105,17 +112,17 @@ export const removeFromWatchlist = async (id) => {
 }
 
 // Async function to update category in supabase db
-export const updateCategory = async (id, category) => {
+export const updatestatus = async (id, status) => {
   const { data, error } = await supabase
     .from('anitracker_db')
-    .update({ status: category })
+    .update({ status: status })
     .eq('id', id)
     .select('*')
 
   if (error) {
     console.error('update error:', error)
   } else {
-    showToast('category updated successfully!', 'success')
+    showToast('Status updated successfully!', 'success')
     console.log('Updated:', data)
     fetchSupabaseData() // refresh list
   }
@@ -145,7 +152,7 @@ export const closeMenu = () => {
 }
 
 // handle update category
-export const handleCategoryUpdate = (id, category) => {
+export const handlestatusUpdate = (id, status) => {
   closeMenu()
-  updateCategory(id, category)
+  updatestatus(id, status)
 }

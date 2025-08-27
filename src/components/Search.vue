@@ -5,12 +5,12 @@ import { ref } from 'vue'
 import {
   addToWatchlist,
   isOpen,
-  categories,
+  status,
   searchbar,
   animeSearch,
   handleCategoryModal,
   animeName,
-  selectedCategory,
+  selectedStatus,
   addAnime,
 } from '../services/watchlistServices'
 
@@ -245,17 +245,17 @@ const debounced = debounce(async function fetchanime() {
               @click.stop
             >
               <div class="flex items-center text-white">
-                <label for="categories" class="text-lg">Select category: </label>
+                <label for="status" class="text-lg">Select category: </label>
                 <select
                   name="category"
                   id="category"
-                  v-model="selectedCategory"
+                  v-model="selectedStatus"
                   class="text-sm outline-none text-center"
                   @change="addToWatchlist()"
                 >
                   <option
                     :value="category"
-                    v-for="category in categories"
+                    v-for="category in status"
                     :key="category"
                     class="text-black text-sm"
                   >
