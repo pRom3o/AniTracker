@@ -10,7 +10,6 @@ const userDetails = reactive({
   name: '',
   bio: '',
   total_anime: 0,
-  watched: 0,
 })
 const watchlist = reactive({
   watched: 0,

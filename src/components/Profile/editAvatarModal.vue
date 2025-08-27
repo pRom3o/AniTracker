@@ -1,6 +1,6 @@
 <script setup>
 import {
-  edit_avatar_modal,
+  editAvatarToggle,
   previewUrl,
   handleFileChange,
   uploadAvatarNow,
@@ -12,7 +12,7 @@ import {
   <div class="w-full h-screen bg-black/50 fixed z-100 p-4">
     <div
       class="h-full w-full p-3 flex items-center justify-center backdrop-blur-md"
-      @click.self="edit_avatar_modal"
+      @click.self="editAvatarToggle"
     >
       <div
         class="min-h-72 md:w-88 w-full rounded-3xl border p-4 cards flex flex-col items-center justify-between space-y-5"

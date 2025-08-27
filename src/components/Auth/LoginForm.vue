@@ -1,12 +1,13 @@
 <script setup>
-import { ref, defineProps } from 'vue'
+import { ref } from 'vue'
 import { user_email, user_password } from '@/services/authServices'
 import { useRouter } from 'vue-router'
 import LoadingIcon from '/public/icons/LoadingIcon.vue'
 import { show_toast } from '../../services/toastServices'
 import { supabase } from '../../lib/supabaseClient'
 
-defineProps({ switchAuthView: () => {} })
+// defineProps({ switchAuthView: () => {} })
+const emit = defineEmits(['switchForm'])
 
 const loading = ref(false)
 const router = useRouter()
@@ -65,7 +66,7 @@ const handleSignIn = () => {
           >
             <LoadingIcon />
           </button>
-          <button class="text-[#5a96f5] text-center" @click="switchAuthView('signup')">
+          <button class="text-[#5a96f5] text-center" @click="emit('switchForm')">
             Not a user? Join us here
           </button>
         </div>

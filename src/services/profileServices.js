@@ -1,11 +1,11 @@
-import { ref } from 'vue'
+import { ref, inject } from 'vue'
 import { supabase } from '../lib/supabaseClient'
+const auth = inject('auth')
+export const editAvatar = ref(false)
 
-export const edit_avatar = ref(false)
-
-export const edit_avatar_modal = () => {
-  edit_avatar.value = !edit_avatar.value
-  console.log(edit_avatar.value)
+export const editAvatarToggle = () => {
+  editAvatar.value = !editAvatar.value
+  console.log(editAvatar.value)
 }
 
 export const uploadAvatar = async (file, userId) => {

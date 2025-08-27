@@ -7,7 +7,7 @@ import { show_toast } from '../../services/toastServices'
 import { ref } from 'vue'
 
 const loading = ref(false)
-
+const emit = defineEmits(['switchForm'])
 const handleSignUp = async () => {
   loading.value = true
   console.log('signing up')
@@ -70,7 +70,7 @@ const handleSignUp = async () => {
           >
             <LoadingIcon />
           </button>
-          <button class="text-[#5a96f5] text-center" @click="switchAuthView('login')">
+          <button class="text-[#5a96f5] text-center" @click="emit('switchForm')">
             Already a user? Login here
           </button>
         </div>

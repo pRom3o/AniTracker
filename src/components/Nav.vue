@@ -1,14 +1,15 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <script setup>
-import { nextTick, onMounted, ref, onBeforeUnmount, inject } from 'vue'
+import { onMounted, ref, onBeforeUnmount, inject } from 'vue'
 import { RouterLink } from 'vue-router'
 import Search from './Search.vue'
 import { searchbar, animeSearch } from '../services/watchlistServices'
-import { toggleDropdown, isDropdownOpen, signOutUser } from '../services/authServices'
+import { toggleDropdown, isDropdownOpen } from '../services/authServices'
 import { useRouter } from 'vue-router'
 
 import ProfileIcon from '/public/icons/ProfileIcon.vue'
 import LogoutIcon from '/public/icons/LogoutIcon.vue'
+import { logout } from '../services/authServices'
 
 const dropDownRef = ref(null)
 const profileButtonRef = ref(null)
@@ -38,14 +39,9 @@ onBeforeUnmount(() => {
 
 const router = useRouter()
 // handle signout
-const handleSignOut = async () => {
-  const { error } = await signOutUser()
-  if (error) {
-    console.error('Sign out error: ', error.message)
-    return
-  }
 
-  await nextTick()
+const handleLogout = () => {
+  logout()
   router.push('/auth')
 }
 </script>
@@ -101,7 +97,7 @@ const handleSignOut = async () => {
             </button>
             <button
               class="w-full px-5 p-3 bg-[#ffffff0d] border border-[#ffffff1a] rounded-3xl hover:bg-black/20 flex items-center justify-evenly space-x-1"
-              @click="handleSignOut"
+              @click="handleLogout"
             >
               <p>Logout</p>
               <LogoutIcon />

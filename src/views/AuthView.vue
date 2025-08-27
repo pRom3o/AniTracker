@@ -2,17 +2,23 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { inject } from 'vue'
+import LoginForm from '../components/Auth/LoginForm.vue'
+import SignupForm from '../components/Auth/SignupForm.vue'
 const loading = ref(true)
 
 const auth = inject('auth')
 const router = useRouter()
-const currentAuthView = ref('login')
+// const currentAuthView = ref('login')
 
-const switchAuthView = (page) => {
-  console.log('page', page)
-  currentAuthView.value = page
+// const switchAuthView = (page) => {
+//   console.log('page', page)
+//   currentAuthView.value = page
+// }
+const isLogin = ref(true)
+
+function handleSwitch() {
+  isLogin.value = !isLogin.value
 }
-
 onMounted(() => {
   if (auth && auth.user.value) {
     router.push('/profile')
@@ -23,10 +29,10 @@ onMounted(() => {
 
 <template>
   <div class="min-h-screen w-full background-auth">
-    <!-- <Transition name="switch-form"> -->
-    <LoginForm :switchAuthView="{ switchAuthView }" />
-    <!-- <SignupForm v-else :switchAuthView="{ switchAuthView }" /> -->
-    <!-- </Transition> -->
+    <Transition name="switch-form">
+      <LoginForm v-if="isLogin" @switchForm="handleSwitch" />
+      <SignupForm v-else @switchForm="handleSwitch" />
+    </Transition>
     <!-- <div class="spinner" v-else></div> -->
   </div>
 </template>

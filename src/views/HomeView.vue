@@ -1,11 +1,36 @@
 <script setup>
 import Nav from '@/components/Nav.vue'
+import { onMounted, ref } from 'vue'
+import nextBtn from '../components/buttons/nextBtn.vue'
+import prevBtn from '../components/buttons/prevBtn.vue'
+
+const topAnimes = ref([])
+const queryType = 'upcoming'
+
+const getTopAnime = async () => {
+  try {
+    const response = await fetch(`https://api.jikan.moe/v4/top/anime?q=${queryType}}`)
+
+    if (!response.ok) {
+      throw new Error('Unsuccessful fetch')
+    }
+    const data = await response.json()
+    topAnimes.value = data.data
+    console.log('Fetched: ', topAnimes.value)
+  } catch (error) {
+    console.log('error: ', error.message)
+  }
+}
+
+onMounted(() => {
+  getTopAnime()
+})
 </script>
 
 <template>
   <div class="h-screen flex-1 w-full text-center text-white/80 body overflow-auto">
     <Nav />
-    <main class="flex flex-col w-full px-10 md:pt-34 pt-30 pb-20 md:pb-30">
+    <main class="flex flex-col w-full px-10 md:pt-34 pt-30 pb-20 md:pb-14">
       <header class="text-center flex flex-col items-center">
         <h1
           class="md:text-6xl text-[2rem] w-full font-extrabold md:mb-6 mb-4 md:w-[50%] flex items-center text-center md:px-10"
@@ -68,6 +93,19 @@ import Nav from '@/components/Nav.vue'
               </p>
             </div>
           </div>
+        </div>
+      </section>
+      <section class="w-full flex items-center justify-center p-3 mt-12">
+        <div class="flex items-center justify-evenly w-full border min-h-40">
+          <prevBtn />
+          <div class="h-full w-full flex items-center justify-center p-3">
+            <div class="lg:w-[1200px] w-full grid grid-cols-3 gap-3">
+              <div class="min-h-40 cards"></div>
+              <div class="min-h-40 cards"></div>
+              <div class="min-h-40 cards"></div>
+            </div>
+          </div>
+          <nextBtn />
         </div>
       </section>
     </main>

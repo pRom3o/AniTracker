@@ -13,13 +13,22 @@ import {
   is_data_fetched,
   closeMenu,
   handleCategoryUpdate,
+  fetchSupabaseData,
 } from '../services/watchlistServices'
 import EllipsisIcon from '../../public/icons/ellipsisIcon.vue'
 import { getUser } from '../services/authServices'
-import { onMounted } from 'vue'
+import { onMounted, ref } from 'vue'
+const watched = ref([])
+const watching = ref([])
+const interested = ref([])
 
+const arr = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 onMounted(() => {
+  fetchSupabaseData()
   getUser()
+  watched.value = watchlist['Watched']
+  watching.value = watchlist['Watching']
+  interested.value = watchlist['Interested in']
 })
 </script>
 
@@ -45,14 +54,14 @@ onMounted(() => {
         <h2 class="text-center md:text-3xl font-bold text-2xl md:m-20 mb-8 mt-12">My watchlist</h2>
         <!-- Watched section -->
         <Transition name="fade-slide" appear
-          ><div v-if="watchedList.length > 0" class="mt-8">
+          ><div v-if="watched.length > 0" class="mt-8">
             <h2 class="font-bold text-2xl md:text-4xl">Watched</h2>
             <div class="flex items-center justify-center">
               <div
                 class="grid lg:grid-cols-6 md:grid-cols-5 grid-cols-3 md:gap-2 gap-2.5 md:w-[80%] w-full"
               >
                 <div
-                  v-for="(anime, index) in watchedList"
+                  v-for="(anime, index) in watched"
                   :key="index"
                   class="p-2 cards md:max-h-80 md:max-w-64 min-h-52 min-w-32 rounded-2xl shadow-2xl md:p-3 transition-transform duration-500 ease-in-out transform md:hover:scale-102 relative"
                 >
@@ -131,12 +140,12 @@ onMounted(() => {
         <!-- Currently watching section -->
 
         <Transition name="fade-slide" appear
-          ><div v-if="watchingList.length > 0" class="mt-8">
+          ><div v-if="watching.length > 0" class="mt-8">
             <h2 class="font-bold text-2xl md:text-4xl">Currently watching</h2>
             <div class="flex items-center justify-center">
               <div class="grid lg:grid-cols-6 md:grid-cols-5 grid-cols-3 gap-2 md:w-[80%] w-full">
                 <div
-                  v-for="(anime, index) in watchingList"
+                  v-for="(anime, index) in watching"
                   :key="index"
                   class="p-2 cards rounded-2xl shadow-2xl md:p-3 transition-transform duration-500 ease-in-out transform md:hover:scale-102 relative"
                 >
@@ -215,12 +224,12 @@ onMounted(() => {
         <!-- Interested in section -->
 
         <Transition name="fade-slide" appear
-          ><div v-if="interestedInList.length > 0" class="mt-8">
+          ><div v-if="interested.length > 0" class="mt-8">
             <h2 class="font-bold text-2xl md:text-4xl">Interested in</h2>
             <div class="flex items-center justify-center">
               <div class="grid lg:grid-cols-6 md:grid-cols-5 grid-cols-3 gap-2 md:w-[80%] w-full">
                 <div
-                  v-for="(anime, index) in interestedInList"
+                  v-for="(anime, index) in interested"
                   :key="index"
                   class="p-2 cards rounded-2xl shadow-2xl md:p-3 transition-transform duration-500 ease-in-out transform md:hover:scale-102 relative"
                 >

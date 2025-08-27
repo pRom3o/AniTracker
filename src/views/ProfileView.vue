@@ -5,6 +5,10 @@ import LeftarrowIcon from '../../public/icons/LeftarrowIcon.vue'
 import SettingsIcon from '../../public/icons/SettingsIcon.vue'
 import editAvatarModal from '../components/Profile/editAvatarModal.vue'
 import LogoutIcon from '../../public/icons/LogoutIcon.vue'
+import LoadingIcon from '../../public/icons/LoadingIcon.vue'
+import { editAvatar, editAvatarToggle, previewUrl } from '../services/profileServices'
+import { logout, getUser } from '../services/authServices'
+// import { supabase } from '../lib/supabaseClient'
 
 const auth = inject('auth')
 
@@ -13,15 +17,17 @@ const router = useRouter()
 const user = ref({})
 const userDetails = ref({})
 const watchlist = ref({})
+const loading = ref(false)
 
 const goBack = () => {
   router.push('/')
 }
 
 const handleLogout = () => {
-  console.log('out')
-  auth.logout()
-  console.log('done')
+  loading.value = !loading.value
+  logout()
+  router.push('/auth')
+  loading.value = false
 }
 
 onMounted(() => {
@@ -32,6 +38,10 @@ onMounted(() => {
   console.log('user: ', user)
   console.log('userDetails: ', userDetails)
   console.log('watchlist: ', watchlist)
+})
+
+onMounted(() => {
+  getUser()
 })
 </script>
 
@@ -67,7 +77,7 @@ onMounted(() => {
                 />
                 <button
                   class="absolute bottom-0 right-5 p-2 rounded-full bg-black/50 cursor-pointer"
-                  @click="edit_avatar_modal"
+                  @click="editAvatarToggle"
                 >
                   <editIcon />
                 </button>
@@ -99,10 +109,11 @@ onMounted(() => {
           @click="handleLogout"
         >
           <p>Logout</p>
-          <LogoutIcon class="h-5 w-5" />
+          <LogoutIcon class="h-5 w-5" v-if="loading == false" />
+          <LoadingIcon class="h-5 w-5" v-else />
         </button>
       </div>
-      <editAvatarModal v-if="edit_avatar == true" />
+      <editAvatarModal v-if="editAvatar == true" />
     </div>
   </div>
 </template>

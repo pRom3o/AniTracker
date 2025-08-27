@@ -1,5 +1,6 @@
 import { ref } from 'vue'
 import { supabase } from '../lib/supabaseClient'
+import { show_toast } from './toastServices'
 
 export const user_email = ref('') // store user email
 export const user_password = ref('') // store password
@@ -54,6 +55,7 @@ export async function getUser() {
     return user
   } else if (error) {
     console.error('Error getting user:', error.message)
+    show_toast('Login to access this page', 'failed')
   }
 }
 

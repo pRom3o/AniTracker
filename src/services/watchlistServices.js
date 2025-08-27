@@ -46,6 +46,7 @@ export const fetchSupabaseData = async () => {
     setTimeout(() => {
       watchlist.value = data
       is_data_fetched.value = true
+      console.log('fetched', watchlist.value)
     }, 500)
   }
 }
