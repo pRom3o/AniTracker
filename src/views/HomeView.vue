@@ -4,43 +4,39 @@ import { onMounted, ref, computed, onUnmounted } from 'vue'
 import nextBtn from '../components/buttons/nextBtn.vue'
 import prevBtn from '../components/buttons/prevBtn.vue'
 
-const topAnimes = ref([])
+const recommendations = ref([])
 const currentPage = ref(1)
 const perPage = ref(4)
 // const queryType = 'upcoming'
 
-const getTopAnime = async () => {
+const getRecommendations = async () => {
   try {
-    const response = await fetch('https://api.jikan.moe/v4/top/anime?type=upcoming')
+    const response = await fetch('https://api.jikan.moe/v4/recommendations/anime')
+    if (!response.ok) throw new Error('Unsuccessful fetch')
 
-    if (!response.ok) {
-      throw new Error('Unsuccessful fetch')
-    }
     const data = await response.json()
-    topAnimes.value = data.data
-    console.log('Fetched: ', topAnimes.value)
+    // flatten entries into a single array
+    recommendations.value = data.data.flatMap((rec) => rec.entry)
+    console.log(recommendations.value)
   } catch (error) {
-    console.log('error: ', error.message)
+    console.error('Error fetching recommendations:', error.message)
   }
 }
 
 const isSmallScreen = ref(false)
 // const isSmallmid = ref(false)
 
-const paginatedAnime = computed(() => {
+const paginatedRecommendations = computed(() => {
   const start = (currentPage.value - 1) * perPage.value
-  return topAnimes.value.slice(start, start + perPage.value)
+  return recommendations.value.slice(start, start + perPage.value)
 })
 
-const totalPages = computed(() => Math.ceil(topAnimes.value.length / perPage.value))
+const totalPages = computed(() => Math.ceil(recommendations.value.length / perPage.value))
 
 const updatePerPage = () => {
   if (window.innerWidth < 740) {
     // mobile
     perPage.value = 1
-    isSmallScreen.value = true
-  } else if (window.innerWidth > 740 && window.innerWidth < 1000) {
-    perPage.value = 2
     isSmallScreen.value = true
   } else {
     perPage.value = 4
@@ -58,15 +54,15 @@ onUnmounted(() => {
 })
 
 onMounted(() => {
-  getTopAnime()
-  console.log('paginated: ', paginatedAnime.value)
+  getRecommendations()
+  console.log('paginated: ', paginatedRecommendations.value)
 })
 </script>
 
 <template>
   <div class="h-screen flex-1 w-full text-center text-white/80 body overflow-auto">
     <Nav />
-    <main class="flex flex-col w-full px-10 md:pt-34 pt-30 pb-20 md:pb-14">
+    <main class="flex flex-col w-full px-10 md:pt-34 pt-30 pb-10 md:pb-14">
       <header class="text-center flex flex-col items-center">
         <h1
           class="md:text-6xl text-[2rem] w-full font-extrabold md:mb-6 mb-4 md:w-[50%] flex items-center text-center md:px-10"
@@ -131,28 +127,39 @@ onMounted(() => {
           </div>
         </div>
       </section>
-      <section class="w-full flex items-center justify-center p-3 mt-12">
-        <div class="flex items-center justify-evenly w-full border min-h-40">
+    </main>
+    <section class="w-full flex flex-col items-center justify-center my-12">
+      <h3 class="font-bold text-2xl md:text-4xl">Recommendations for our users:</h3>
+
+      <section class="w-full flex items-center justify-center mt-12">
+        <div class="flex items-center justify-evenly w-full min-h-60">
           <prevBtn @click="currentPage--" :disabled="currentPage === 1" />
-          <div class="h-full w-full flex items-center justify-center p-3">
+          <div class="h-full w-full flex items-center justify-center">
             <div class="w-full grid gap-3" :class="isSmallScreen ? 'grid-cols-1' : 'grid-cols-4'">
-              <div
-                class="min-h-40 cards flex items-center p-1"
-                v-for="anime in paginatedAnime"
-                :key="anime.mal_id"
-                :class="isSmallScreen ? 'w-full' : ''"
-              >
-                <img :src="anime.images.jpg.image_url" alt="" class="h-full w-[50%] rounded-2xl" />
-              </div>
+              <TransitionGroup name="fade-slide">
+                <div
+                  class="min-h-40 cards flex items-center p-2 transition-transform duration-500 ease-in-out transform hover:-translate-y-3"
+                  v-for="anime in paginatedRecommendations"
+                  :key="anime.mal_id"
+                  :class="isSmallScreen ? 'w-full' : ''"
+                >
+                  <img
+                    :src="anime.images.jpg.image_url"
+                    alt=""
+                    class="h-full w-[50%] rounded-2xl"
+                  />
+                </div>
+              </TransitionGroup>
+
               <!-- <div class="min-h-40 cards"></div>
-              <div class="min-h-40 cards"></div>
-              <div class="min-h-40 cards"></div> -->
+            <div class="min-h-40 cards"></div>
+            <div class="min-h-40 cards"></div> -->
             </div>
           </div>
           <nextBtn @click="currentPage++" :disabled="currentPage === totalPages" />
         </div>
       </section>
-    </main>
+    </section>
   </div>
 </template>
 
@@ -192,5 +199,18 @@ h2 {
 
 .track-icon {
   background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+
+.fade-slide-enter-active,
+.fade-slide-leave-active {
+  transition:
+    opacity 0.5s ease-in-out,
+    transform 0.5s ease-in-out;
+}
+
+.fade-slide-enter-from,
+.fade-slide-leave-to {
+  transform: translateY(-20px);
+  opacity: 0;
 }
 </style>
