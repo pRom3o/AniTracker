@@ -1,6 +1,8 @@
-import { ref, inject } from 'vue'
+import { ref } from 'vue'
 import { supabase } from '../lib/supabaseClient'
-const auth = inject('auth')
+import { getUser } from './authServices'
+
+const user = await getUser()
 export const editAvatar = ref(false)
 
 export const editAvatarToggle = () => {
@@ -54,7 +56,7 @@ export const uploadAvatarNow = async () => {
   const file = selectedFile.value
 
   const fileExt = file.name.split('.').pop()
-  const fileName = `${userId}.${fileExt}`
+  const fileName = `${user.id}.${fileExt}`
   const filePath = `avatars/${fileName}`
 
   const { error: uploadError } = await supabase.storage.from('avatars').upload(filePath, file, {

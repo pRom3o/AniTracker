@@ -1,10 +1,44 @@
 <script setup>
 import { user_email, user_password, signUpUser } from '@/services/authServices.js'
-
+import { supabase } from '../../lib/supabaseClient'
 import LoadingIcon from '/public/icons/LoadingIcon.vue'
 import { show_toast } from '../../services/toastServices'
+import { previewUrl } from '../../services/profileServices'
+import { showToast } from '../../services/watchlistServices'
 
 import { ref } from 'vue'
+
+// const auth = inject('auth')
+
+// const user = auth.user
+const userBio = ref('')
+const userName = ref('')
+
+const insertProfile = async (id, email) => {
+  const { data, error } = await supabase
+    .from('profiles')
+    .upsert(
+      [
+        {
+          id: id,
+          bio: userBio.value,
+          name: userName.value,
+          email: email,
+          avatar_url: previewUrl.value || '',
+        },
+      ],
+      { onConflict: 'id' },
+    )
+    .select('*')
+
+  if (error) {
+    showToast('error creating profile: ', 'failed')
+    console.log('error creating profile: ', error.message)
+  } else {
+    showToast('Profile inserted: ', 'success')
+    console.log('Profile inserted: ', data)
+  }
+}
 
 const loading = ref(false)
 const emit = defineEmits(['switchForm'])
@@ -13,8 +47,9 @@ const handleSignUp = async () => {
   console.log('signing up')
   try {
     const { data } = await signUpUser(user_email.value, user_password.value)
-    if (data) {
+    if (data?.user) {
       console.log('sign up complete: ', data.user.email)
+      await insertProfile(data.user.id, data.user.email)
       loading.value = false
       user_email.value = ''
       user_password.value = ''
@@ -48,6 +83,26 @@ const handleSignUp = async () => {
             />
           </div>
           <div class="flex flex-col space-y-3">
+            <label for="userName" class="px-4">Name</label>
+            <input
+              type="text"
+              v-model="userName"
+              placeholder="enter your name..."
+              class="w-full outline-gray-500 py-3 px-5 rounded-3xl outline"
+            />
+          </div>
+          <div class="flex flex-col space-y-3">
+            <label for="userBio" class="px-4">Bio</label>
+            <textarea
+              name="userBio"
+              id="userBio"
+              v-model="userBio"
+              placeholder="enter a short bio..."
+              class="w-full outline-gray-500 py-3 px-5 rounded-3xl outline resize-none"
+            ></textarea>
+          </div>
+
+          <div class="flex flex-col space-y-3">
             <label for="user_password" class="px-4">Password</label>
             <input
               type="password"
@@ -56,6 +111,7 @@ const handleSignUp = async () => {
               class="w-full outline-gray-500 py-3 px-5 rounded-3xl outline"
             />
           </div>
+
           <button
             @click="handleSignUp"
             v-if="loading == false"

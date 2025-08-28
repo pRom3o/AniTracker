@@ -8,7 +8,6 @@ import LogoutIcon from '../../public/icons/LogoutIcon.vue'
 import LoadingIcon from '../../public/icons/LoadingIcon.vue'
 import { editAvatar, editAvatarToggle, previewUrl } from '../services/profileServices'
 import { logout, getUser } from '../services/authServices'
-// import { supabase } from '../lib/supabaseClient'
 
 const auth = inject('auth')
 
@@ -24,12 +23,9 @@ const goBack = () => {
 }
 
 const handleLogout = () => {
-  loading.value = !loading.value
   logout()
   router.push('/auth')
-  loading.value = false
 }
-
 onMounted(() => {
   user.value = auth.user
   userDetails.value = auth.userDetails
@@ -42,6 +38,7 @@ onMounted(() => {
 
 onMounted(() => {
   getUser()
+  // getProfile()
 })
 </script>
 
