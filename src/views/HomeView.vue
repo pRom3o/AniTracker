@@ -1,13 +1,8 @@
 <script setup>
 import Nav from '@/components/Nav.vue'
-import { onMounted, ref, computed, onUnmounted } from 'vue'
-import nextBtn from '../components/buttons/nextBtn.vue'
-import prevBtn from '../components/buttons/prevBtn.vue'
+import { onMounted, ref } from 'vue'
 
 const recommendations = ref([])
-const currentPage = ref(1)
-const perPage = ref(4)
-// const queryType = 'upcoming'
 
 const getRecommendations = async () => {
   try {
@@ -23,44 +18,15 @@ const getRecommendations = async () => {
   }
 }
 
-const isSmallScreen = ref(false)
-// const isSmallmid = ref(false)
-
-const paginatedRecommendations = computed(() => {
-  const start = (currentPage.value - 1) * perPage.value
-  return recommendations.value.slice(start, start + perPage.value)
-})
-
-const totalPages = computed(() => Math.ceil(recommendations.value.length / perPage.value))
-
-const updatePerPage = () => {
-  if (window.innerWidth < 740) {
-    // mobile
-    perPage.value = 1
-    isSmallScreen.value = true
-  } else {
-    perPage.value = 4
-    isSmallScreen.value = false
-  }
-}
-
-onMounted(() => {
-  updatePerPage()
-  window.addEventListener('resize', updatePerPage)
-})
-
-onUnmounted(() => {
-  window.removeEventListener('resize', updatePerPage)
-})
-
 onMounted(() => {
   getRecommendations()
-  console.log('paginated: ', paginatedRecommendations.value)
 })
 </script>
 
 <template>
-  <div class="h-screen flex-1 w-full text-center text-white/80 body overflow-auto">
+  <div
+    class="min-h-screen flex-1 max-w-full text-center text-white/80 body overflow-auto scroll-hide"
+  >
     <Nav />
     <main class="flex flex-col w-full px-10 md:pt-34 pt-30 pb-10 md:pb-14">
       <header class="text-center flex flex-col items-center">
@@ -87,14 +53,12 @@ onMounted(() => {
               </div>
               <h2>Smart Recommendations</h2>
               <p>
-                Get AI-powered suggestions based on your viewing history, ratings, and preferences.
-                Discover your next favorite series effortlessly.
+                Get suggestions based on your viewing history, ratings, and preferences. Discover
+                your next favorite series effortlessly.
               </p>
             </div>
           </div>
-
           <!-- Track card -->
-
           <div
             class="md:w-[500px] lg:w-[300px] w-full px-6 md:py-20 py-10 transition-transform duration-500 ease-in-out transform hover:-translate-y-3 cards rounded-3xl"
           >
@@ -109,7 +73,6 @@ onMounted(() => {
               </p>
             </div>
           </div>
-
           <!-- Customize card -->
           <div
             class="md:w-[500px] lg:w-[300px] w-full px-6 md:py-20 py-10 transition-transform duration-500 ease-in-out transform hover:-translate-y-3 cards rounded-3xl"
@@ -128,35 +91,31 @@ onMounted(() => {
         </div>
       </section>
     </main>
-    <section class="w-full flex flex-col items-center justify-center my-12">
-      <h3 class="font-bold text-2xl md:text-4xl">Recommendations for our users:</h3>
+    <section class="h-[400px] w-full flex flex-col items-center justify-center mt-10 p-8">
+      <h3 class="font-bold text-2xl md:text-4xl">Recommendations for you:</h3>
 
-      <section class="w-full flex items-center justify-center mt-12">
-        <div class="flex items-center justify-evenly w-full min-h-60">
-          <prevBtn @click="currentPage--" :disabled="currentPage === 1" />
-          <div class="h-full w-full flex items-center justify-center">
-            <div class="w-full grid gap-3" :class="isSmallScreen ? 'grid-cols-1' : 'grid-cols-4'">
-              <TransitionGroup name="fade-slide">
-                <div
-                  class="min-h-40 cards flex items-center p-2 transition-transform duration-500 ease-in-out transform hover:-translate-y-3"
-                  v-for="anime in paginatedRecommendations"
-                  :key="anime.mal_id"
-                  :class="isSmallScreen ? 'w-full' : ''"
-                >
-                  <img
-                    :src="anime.images.jpg.image_url"
-                    alt=""
-                    class="h-full w-[50%] rounded-2xl"
-                  />
-                </div>
-              </TransitionGroup>
-
-              <!-- <div class="min-h-40 cards"></div>
-            <div class="min-h-40 cards"></div>
-            <div class="min-h-40 cards"></div> -->
+      <section class="w-full md:mt-8 pb-8">
+        <div class="flex overflow-x-auto gap-6 px-4 py-2 scrollbar-custom">
+          <TransitionGroup name="fade-slide" tag="div" class="flex gap-6">
+            <div
+              class="min-w-[200px] max-w-[250px] flex-shrink-0 cards flex flex-col items-center p-2 transition-transform duration-500 ease-in-out transform hover:-translate-y-3 snap-x snap-mandatory"
+              v-for="anime in recommendations"
+              :key="anime.mal_id"
+            >
+              <img
+                :src="anime.images.jpg.image_url"
+                alt="#"
+                class="h-[250px] w-full object-cover rounded-2xl"
+              />
+              <p class="mt-2 text-md text-center">
+                {{
+                  anime.title && anime.title.length > 40
+                    ? anime.title.slice(0, 40) + '...'
+                    : anime.title || 'no title available'
+                }}
+              </p>
             </div>
-          </div>
-          <nextBtn @click="currentPage++" :disabled="currentPage === totalPages" />
+          </TransitionGroup>
         </div>
       </section>
     </section>
@@ -164,6 +123,28 @@ onMounted(() => {
 </template>
 
 <style scoped>
+.scroll-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* global.css */
+.scrollbar-custom::-webkit-scrollbar {
+  height: 8px; /* horizontal scrollbar height */
+}
+
+.scrollbar-custom::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-custom::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #2a3dbe 0%, #262e7b 50%, #3d236e 100%); /* purple → gold */
+  border-radius: 9999px; /* full rounded */
+}
+
+.scrollbar-custom::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(to right, #9333ea, #f59e0b);
+}
+
 .body {
   background: linear-gradient(135deg, #0a0e27 0%, #1a1d3a 50%, #2d1b4e 100%);
 }
@@ -175,7 +156,8 @@ onMounted(() => {
   transition: all 0.3s ease;
 }
 
-h1 {
+h1,
+h3 {
   font-weight: 800;
   margin-bottom: 1rem;
   background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);

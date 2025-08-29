@@ -35,16 +35,6 @@ import UserProvider from './components/providers/UserProvider.vue'
   </div>
   <Toast />
   <UserProvider>
-    <RouterView />
+    <RouterView class="font-kanit" />
   </UserProvider>
 </template>
-
-<style scoped>
-body {
-  font-family:
-    'Inter',
-    -apple-system,
-    BlinkMacSystemFont,
-    sans-serif;
-}
-</style>
