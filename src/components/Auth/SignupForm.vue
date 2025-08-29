@@ -1,68 +1,16 @@
 <script setup>
-import { user_email, user_password, signUpUser } from '@/services/authServices.js'
-import { supabase } from '../../lib/supabaseClient'
+import {
+  user_email,
+  user_password,
+  userBio,
+  userName,
+  loading,
+  handleSignUp,
+} from '../../services/authServices'
+
 import LoadingIcon from '/public/icons/LoadingIcon.vue'
-import { show_toast } from '../../services/toastServices'
-import { previewUrl } from '../../services/profileServices'
-import { showToast } from '../../services/watchlistServices'
 
-import { ref } from 'vue'
-
-// const auth = inject('auth')
-
-// const user = auth.user
-const userBio = ref('')
-const userName = ref('')
-
-const insertProfile = async (id, email) => {
-  const { data, error } = await supabase
-    .from('profiles')
-    .upsert(
-      [
-        {
-          id: id,
-          bio: userBio.value,
-          name: userName.value,
-          email: email,
-          avatar_url: previewUrl.value || '',
-        },
-      ],
-      { onConflict: 'id' },
-    )
-    .select('*')
-
-  if (error) {
-    showToast('error creating profile: ', 'failed')
-    console.log('error creating profile: ', error.message)
-  } else {
-    showToast('Profile inserted: ', 'success')
-    console.log('Profile inserted: ', data)
-  }
-}
-
-const loading = ref(false)
 const emit = defineEmits(['switchForm'])
-const handleSignUp = async () => {
-  loading.value = true
-  console.log('signing up')
-  try {
-    const { data } = await signUpUser(user_email.value, user_password.value)
-    if (data?.user) {
-      console.log('sign up complete: ', data.user.email)
-      await insertProfile(data.user.id, data.user.email)
-      loading.value = false
-      user_email.value = ''
-      user_password.value = ''
-
-      show_toast('Signup success, check email for confirmation message', 'success')
-    }
-  } catch (err) {
-    show_toast(err.message || 'Signup failed', 'failed')
-    console.error('Sign up failed: ', err.message)
-  } finally {
-    loading.value = false
-  }
-}
 </script>
 
 <template>

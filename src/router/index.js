@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import AuthView from '../views/AuthView.vue'
+import DetailsView from '../views/DetailsView.vue'
 // import { supabase } from '../lib/supabaseClient'
 // import { inject } from 'vue'
 
@@ -37,6 +38,11 @@ const router = createRouter({
       path: '/auth',
       name: 'Auth',
       component: AuthView,
+    },
+    {
+      path: '/anime/:id',
+      name: 'Details',
+      component: DetailsView,
     },
   ],
 })

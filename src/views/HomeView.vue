@@ -97,7 +97,8 @@ onMounted(() => {
       <section class="w-full md:mt-8 pb-8">
         <div class="flex overflow-x-auto gap-6 px-4 py-2 scrollbar-custom">
           <TransitionGroup name="fade-slide" tag="div" class="flex gap-6">
-            <div
+            <RouterLink
+              :to="'/anime/' + anime.mal_id"
               class="min-w-[200px] max-w-[250px] flex-shrink-0 cards flex flex-col items-center p-2 transition-transform duration-500 ease-in-out transform hover:-translate-y-3 snap-x snap-mandatory"
               v-for="anime in recommendations"
               :key="anime.mal_id"
@@ -114,7 +115,7 @@ onMounted(() => {
                     : anime.title || 'no title available'
                 }}
               </p>
-            </div>
+            </RouterLink>
           </TransitionGroup>
         </div>
       </section>
