@@ -39,8 +39,14 @@ onMounted(async () => {
         <div class="h-full w-full bg-black/50 inset-0 absolute"></div>
         <img :src="banner" alt="anime poster" class="h-full w-full" />
 
+        <div
+          class="absolute left-1 top-1/5 md:hidden flex flex-col justify-center items-center space-y-1 h-[170px] w-full"
+        >
+          <img :src="animeDetails.poster" alt="" class="h-full w-[130px]" />
+          <p class="text-xl">{{ animeDetails.title_english }}</p>
+          <p>{{ animeDetails.title }}</p>
+        </div>
         <div class="w-full">
-          <!-- <img :src="animeDetails.poster" alt="" /> -->
           <div
             class="absolute lg:bottom-[30px] lg:left-[25%] md:left-[30%] md:bottom-[30px] hidden md:block"
           >
@@ -57,7 +63,7 @@ onMounted(async () => {
             class="md:h-[300px] md:w-[200px] h-[200px] w-[150px] absolute md:left-0 lg:left-[27%] md:-top-[70px] hidden md:inline-block rounded-lg"
           />
         </div>
-        <div class="h-full md:w-[75%] w-full flex flex-col">
+        <div class="h-full md:w-[80%] w-full flex flex-col">
           <ul class="flex w-full items-center justify-center md:justify-start">
             <li
               class="px-3 py-5 min-w-40 text-center md:text-lg text-sm leading-8"
@@ -124,7 +130,7 @@ onMounted(async () => {
               </ul>
             </div>
           </div>
-          <section v-show="isShown == true" class="flex px-2 justify-center">
+          <section id="recommendations" v-show="isShown == true" class="flex px-2 justify-center">
             <div class="mt-4 mb-8">
               <div class="p-2 mb-4 w-52 text-center">
                 <h3 class="p-2">Anime you might like</h3>
