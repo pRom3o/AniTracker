@@ -38,7 +38,9 @@ onMounted(async () => {
       <div class="md:h-[320px] h-[270px] w-full relative">
         <div class="h-full w-full bg-black/50 inset-0 absolute"></div>
         <img :src="banner" alt="anime poster" class="h-full w-full" />
+
         <div class="w-full">
+          <!-- <img :src="animeDetails.poster" alt="" /> -->
           <div
             class="absolute lg:bottom-[30px] lg:left-[25%] md:left-[30%] md:bottom-[30px] hidden md:block"
           >
@@ -55,17 +57,17 @@ onMounted(async () => {
             class="md:h-[300px] md:w-[200px] h-[200px] w-[150px] absolute md:left-0 lg:left-[27%] md:-top-[70px] hidden md:inline-block rounded-lg"
           />
         </div>
-        <div class="h-full md:w-[75%] w-full flex flex-col ml-4">
-          <ul class="flex w-full">
+        <div class="h-full md:w-[75%] w-full flex flex-col">
+          <ul class="flex w-full items-center justify-center md:justify-start">
             <li
-              class="px-3 py-5 min-w-60 text-center text-lg leading-8"
+              class="px-3 py-5 min-w-40 text-center md:text-lg text-sm leading-8"
               @click="isSummary"
               :class="isShown == false ? 'border-b border-white' : 'border-0'"
             >
               Summary
             </li>
             <li
-              class="px-3 py-5 min-w-60 text-center text-lg leading-8"
+              class="px-3 py-5 min-w-40 text-center md:text-lg text-sm leading-8"
               @click="isSummary"
               :class="isShown == true ? 'border-b border-white' : 'border-0'"
             >
@@ -73,25 +75,43 @@ onMounted(async () => {
             </li>
           </ul>
           <div class="md:flex w-full p-3 space-x-10" v-show="isShown == false">
-            <div class="md:w-[60%] leading-7">
+            <div class="md:w-[60%] w-full leading-7">
               <p class="w-full">{{ animeDetails.synopsis }}</p>
             </div>
             <div class="flex flex-col md:w-[20%]">
               <hr class="mb-5 text-white/10" />
-              <p id="details">Japanese: {{ animeDetails.title_japanese }}</p>
-              <p id="details">Type: {{ animeDetails.type }}</p>
-              <p id="details">Episodes: {{ animeDetails.episodes }}</p>
-              <p id="details">Status: {{ animeDetails.status }}</p>
-              <p id="details">Duration {{ animeDetails.duration }}</p>
-              <p id="details">Aired: {{ animeDetails.aired }}</p>
-              <p id="details">Season: {{ animeDetails.season }}</p>
-              <p id="details" v-for="(studio, index) in animeDetails.studios" :key="index">
-                studio: {{ studio }}
+              <p id="details">
+                Japanese: <span>{{ animeDetails.title_japanese }}</span>
               </p>
-              <p id="details">Themes: {{ animeDetails.themes.join(', ') || 'none' }}</p>
-              <p id="details">Demogaphic: {{ animeDetails.demographics.join(', ') || 'none' }}</p>
+              <p id="details">
+                Type: <span>{{ animeDetails.type }}</span>
+              </p>
+              <p id="details">
+                Episodes: <span>{{ animeDetails.episodes }}</span>
+              </p>
+              <p id="details">
+                Status: <span>{{ animeDetails.status }}</span>
+              </p>
+              <p id="details">
+                Duration <span>{{ animeDetails.duration }}</span>
+              </p>
+              <p id="details">
+                Aired: <span>{{ animeDetails.aired }}</span>
+              </p>
+              <p id="details">
+                Season: <span>{{ animeDetails.season }}</span>
+              </p>
+              <p id="details" v-for="(studio, index) in animeDetails.studios" :key="index">
+                studio: <span>{{ studio }}</span>
+              </p>
+              <p id="details">
+                Themes: <span>{{ animeDetails.themes.join(', ') || 'none' }}</span>
+              </p>
+              <p id="details">
+                Demogaphic: <span>{{ animeDetails.demographics.join(', ') || 'none' }}</span>
+              </p>
               <hr class="mt-5 text-white/10" />
-              <ul class="flex items-center space-x-3">
+              <ul class="flex flex-wrap items-center space-x-3">
                 <li
                   v-for="(item, index) in animeDetails.genres"
                   :key="item.mal_id"
@@ -104,8 +124,12 @@ onMounted(async () => {
               </ul>
             </div>
           </div>
-          <section v-show="isShown == true" class="flex justify-center lg:justify-start">
+          <section v-show="isShown == true" class="flex px-2 justify-center">
             <div class="mt-4 mb-8">
+              <div class="p-2 mb-4 w-52 text-center">
+                <h3 class="p-2">Anime you might like</h3>
+                <hr />
+              </div>
               <div
                 v-if="recommendations.length"
                 class="grid lg:grid-cols-5 md:grid-cols-3 grid-cols-2 gap-3"
@@ -113,14 +137,14 @@ onMounted(async () => {
                 <div
                   v-for="rec in recommendations"
                   :key="rec.entry.mal_id"
-                  class="flex flex-col items-center justify-center cards w-[130px] p-2"
+                  class="flex flex-col items-center justify-center cards md:w-[130px] p-2"
                 >
                   <img
                     :src="rec.entry.images.jpg.image_url"
                     :alt="rec.entry.title"
-                    class="rounded-3xl h-[150px]"
+                    class="rounded-3xl h-[200px] w-full"
                   />
-                  <p class="text-sm">
+                  <p class="text-sm p-2">
                     {{
                       rec.entry.title && rec.entry.title.length > 30
                         ? rec.entry.title.slice(0, 30) + '...'
@@ -141,6 +165,11 @@ onMounted(async () => {
 <style scoped>
 li:hover {
   cursor: pointer;
+}
+
+span {
+  font-size: x-small;
+  font-weight: 300;
 }
 
 .cards {
