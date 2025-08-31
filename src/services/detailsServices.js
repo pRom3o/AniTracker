@@ -1,6 +1,7 @@
 import { ref } from 'vue'
 
 export const animeDetails = ref({
+  title: '',
   banner: '',
   poster: '',
   synopsis: '',
@@ -13,9 +14,9 @@ export const animeDetails = ref({
   aired: '',
   season: '',
   studio: '',
-  themes: '',
-  demographic: [],
-  genre: [],
+  themes: [],
+  demographics: [],
+  genres: [],
 })
 
 export const fetchAnimeDetails = async (id) => {
@@ -26,6 +27,7 @@ export const fetchAnimeDetails = async (id) => {
     const data = await response.json()
 
     animeDetails.value = data.data
+    animeDetails.value.title = data.data.title
     animeDetails.value.poster = data.data.images.jpg.image_url
     animeDetails.value.synopsis = data.data.synopsis
     animeDetails.value.title_english = data.data.title_english
@@ -37,9 +39,10 @@ export const fetchAnimeDetails = async (id) => {
     animeDetails.value.aired = data.data.aired.string
     animeDetails.value.season = data.data.season
     animeDetails.value.studio = data.data.studios
-    animeDetails.value.demographic = data.data.demographic
-    animeDetails.value.genre = data.data.genre
-    console.log('anime details: ', animeDetails.value)
+    animeDetails.value.demographics = data.data.demographics
+    animeDetails.value.genres = data.data.genres
+    animeDetails.value.themes = data.data.themes
+    console.log('anime details: ', animeDetails.value.genres)
   } catch (error) {
     console.log('error: ', error.message)
   }
