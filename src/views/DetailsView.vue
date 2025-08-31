@@ -1,7 +1,13 @@
 <script setup>
 import { useRoute } from 'vue-router'
 import { ref, onMounted } from 'vue'
-import { fetchAnimeDetails, fetchAniListBanner, animeDetails } from '../services/detailsServices'
+import {
+  fetchAnimeDetails,
+  fetchAniListBanner,
+  animeDetails,
+  recommendations,
+  recommendationsById,
+} from '../services/detailsServices'
 
 const route = useRoute()
 const banner = ref('')
@@ -17,10 +23,12 @@ const isSummary = () => {
 onMounted(() => {
   fetchAnimeDetails(route.params.id)
   fetchAniListBanner(route.params.id)
+  recommendationsById(route.params.id)
 })
 
 onMounted(async () => {
   banner.value = await fetchAniListBanner(Number(route.params.id))
+  console.log('recommendations: ', recommendations.value)
 })
 </script>
 
@@ -77,23 +85,53 @@ onMounted(async () => {
               <p id="details">Duration {{ animeDetails.duration }}</p>
               <p id="details">Aired: {{ animeDetails.aired }}</p>
               <p id="details">Season: {{ animeDetails.season }}</p>
-              <p id="details">studio: {{ animeDetails.studio.name }}</p>
-              <p id="details">Themes: {{ animeDetails.themes[0] }}</p>
-              <p id="details">Demogaphic: {{ animeDetails.demographics[0] }}</p>
+              <p id="details" v-for="(studio, index) in animeDetails.studios" :key="index">
+                studio: {{ studio }}
+              </p>
+              <p id="details">Themes: {{ animeDetails.themes.join(', ') || 'none' }}</p>
+              <p id="details">Demogaphic: {{ animeDetails.demographics.join(', ') || 'none' }}</p>
               <hr class="mt-5 text-white/10" />
-              <ul class="flex items-center">
+              <ul class="flex items-center space-x-3">
                 <li
                   v-for="(item, index) in animeDetails.genres"
                   :key="item.mal_id"
                   class="py-1 px-4 text-sm mt-3 bg-[#333]"
                 >
-                  <a :href="animeDetails.genres[index].url" target="_blank">{{
+                  <a :href="animeDetails.genres[index].url || 'none'" target="_blank">{{
                     animeDetails.genres[index].name
                   }}</a>
                 </li>
               </ul>
             </div>
           </div>
+          <section v-show="isShown == true" class="flex justify-center lg:justify-start">
+            <div class="mt-4 mb-8">
+              <div
+                v-if="recommendations.length"
+                class="grid lg:grid-cols-5 md:grid-cols-3 grid-cols-2 gap-3"
+              >
+                <div
+                  v-for="rec in recommendations"
+                  :key="rec.entry.mal_id"
+                  class="flex flex-col items-center justify-center cards w-[130px] p-2"
+                >
+                  <img
+                    :src="rec.entry.images.jpg.image_url"
+                    :alt="rec.entry.title"
+                    class="rounded-3xl h-[150px]"
+                  />
+                  <p class="text-sm">
+                    {{
+                      rec.entry.title && rec.entry.title.length > 30
+                        ? rec.entry.title.slice(0, 30) + '...'
+                        : rec.entry.title || 'No title'
+                    }}
+                  </p>
+                </div>
+              </div>
+              <p v-else>No recommendations available.</p>
+            </div>
+          </section>
         </div>
       </div>
     </div>
@@ -103,5 +141,12 @@ onMounted(async () => {
 <style scoped>
 li:hover {
   cursor: pointer;
+}
+
+.cards {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
 }
 </style>

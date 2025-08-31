@@ -13,7 +13,7 @@ export const animeDetails = ref({
   duration: '',
   aired: '',
   season: '',
-  studio: '',
+  studios: '',
   themes: [],
   demographics: [],
   genres: [],
@@ -38,11 +38,11 @@ export const fetchAnimeDetails = async (id) => {
     animeDetails.value.duration = data.data.duration
     animeDetails.value.aired = data.data.aired.string
     animeDetails.value.season = data.data.season
-    animeDetails.value.studio = data.data.studios
-    animeDetails.value.demographics = data.data.demographics
+    animeDetails.value.studios = data.data.studios.map((s) => s.name)
+    animeDetails.value.demographics = data.data.demographics.map((d) => d.name)
+    animeDetails.value.themes = data.data.themes.map((t) => t.name)
     animeDetails.value.genres = data.data.genres
-    animeDetails.value.themes = data.data.themes
-    console.log('anime details: ', animeDetails.value.genres)
+    console.log('anime details: ', animeDetails.value)
   } catch (error) {
     console.log('error: ', error.message)
   }
@@ -67,4 +67,17 @@ export const fetchAniListBanner = async (mal_id) => {
 
   const { data } = await response.json()
   return data.Media.bannerImage
+}
+
+export const recommendations = ref([])
+export const recommendationsById = async (id) => {
+  try {
+    const response = await fetch(`https://api.jikan.moe/v4/anime/${id}/recommendations`)
+    if (!response.ok) throw new Error()
+
+    const data = await response.json()
+    recommendations.value = data.data.slice(0, 20)
+  } catch (error) {
+    console.log('error: ', error.message)
+  }
 }
