@@ -52,8 +52,14 @@ export default defineConfig({
     tailwindcss(),
   ],
   server: {
-    host: '0.0.0.0', // listen on all network interfaces
-    port: 2025, // optional — customize your port
+    proxy: {
+      '/anilist': {
+        target: 'https://graphql.anilist.co',
+        changeOrigin: true,
+        secure: true,
+        rewrite: (path) => path.replace(/^\/anilist/, ''),
+      },
+    },
   },
   resolve: {
     alias: {

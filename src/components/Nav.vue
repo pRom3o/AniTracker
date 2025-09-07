@@ -126,9 +126,6 @@ li {
 .overlay {
   background: linear-gradient(135deg, #0a0e27 0%, #1a1d3a 50%, #2d1b4e 100%);
 }
-/* .overlay2 {
-  background-color: rgba(0, 0, 0, 0.4);
-} */
 
 ::placeholder {
   text-align: center;

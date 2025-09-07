@@ -40,7 +40,7 @@ onMounted(async () => {
         <img :src="banner" alt="anime poster" class="h-full w-full" />
 
         <div
-          class="absolute left-1 top-1/5 md:hidden flex flex-col justify-center items-center space-y-1 h-[170px] w-full"
+          class="absolute left-1 top-1/5 md:hidden flex flex-col justify-center items-center space-y-1 h-[170px] w-full z-20"
         >
           <img :src="animeDetails.poster" alt="" class="h-full w-[130px]" />
           <p class="text-xl">{{ animeDetails.title_english }}</p>
@@ -81,7 +81,7 @@ onMounted(async () => {
             </li>
           </ul>
           <div class="md:flex w-full p-3 space-x-10" v-show="isShown == false">
-            <div class="md:w-[60%] w-full leading-7">
+            <div class="md:w-[60%] w-full leading-7 px-2">
               <p class="w-full">{{ animeDetails.synopsis }}</p>
             </div>
             <div class="flex flex-col md:w-[20%]">
@@ -143,7 +143,7 @@ onMounted(async () => {
                 <div
                   v-for="rec in recommendations"
                   :key="rec.entry.mal_id"
-                  class="flex flex-col items-center justify-center cards md:w-[130px] p-2"
+                  class="flex flex-col items-center justify-center cards md:w-[140px] p-2"
                 >
                   <img
                     :src="rec.entry.images.jpg.image_url"

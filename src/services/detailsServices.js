@@ -59,7 +59,7 @@ export const fetchAniListBanner = async (mal_id) => {
 
   const variables = { idMal: mal_id }
 
-  const response = await fetch('https://graphql.anilist.co', {
+  const response = await fetch('/anilist', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ query, variables }),

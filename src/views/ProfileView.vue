@@ -7,7 +7,7 @@ import editAvatarModal from '../components/Profile/editAvatarModal.vue'
 import LogoutIcon from '../../public/icons/LogoutIcon.vue'
 import LoadingIcon from '../../public/icons/LoadingIcon.vue'
 import { editAvatar, editAvatarToggle, previewUrl } from '../services/profileServices'
-import { logout, getUser } from '../services/authServices'
+import { logout } from '../services/authServices'
 
 const auth = inject('auth')
 
@@ -18,6 +18,7 @@ const userDetails = ref({})
 const watchlist = ref({})
 const loading = ref(false)
 
+const metaData = ref({})
 const goBack = () => {
   router.push('/')
 }
@@ -28,17 +29,14 @@ const handleLogout = () => {
 }
 onMounted(() => {
   user.value = auth.user
+  metaData.value = user.value.user_metadata
   userDetails.value = auth.userDetails
   watchlist.value = auth.watchlist
 
   console.log('user: ', user)
+
   console.log('userDetails: ', userDetails)
   console.log('watchlist: ', watchlist)
-})
-
-onMounted(() => {
-  getUser()
-  // getProfile()
 })
 </script>
 
@@ -88,7 +86,7 @@ onMounted(() => {
             class="h-full md:w-[50%] w-full flex flex-col items-center justify-center space-y-5 md:space-y-14"
           >
             <div class="w-full flex flex-col space-y-3 px-4 py-2 cards rounded-2xl">
-              <p>Email: {{ userDetails.email }}</p>
+              <p>Email: {{ metaData.email }}</p>
               <p>Name: {{ userDetails.name ? userDetails.name : 'empty' }}</p>
             </div>
             <div class="w-full flex flex-col space-y-3 px-4 py-2 cards rounded-2xl">
