@@ -2,6 +2,7 @@
 import { ref, onMounted, provide, reactive } from 'vue'
 import { supabase } from '../../lib/supabaseClient.js'
 import { getWatchlistItems } from '../../services/profileServices.js'
+import { useRouter } from 'vue-router'
 
 const user = ref(null)
 const loading = ref(true)
@@ -16,9 +17,11 @@ const watchlist = reactive({
   watching: 0,
   interested: 0,
 })
+const router = useRouter()
 
 const logout = () => {
   supabase.auth.signOut()
+  router.push('/auth')
 }
 
 onMounted(() => {

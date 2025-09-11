@@ -38,19 +38,29 @@ export const status = ['Watched', 'Watching', 'Interested in']
 
 // Fetch existing watchlist items
 export const fetchSupabaseData = async () => {
-  const { data, error } = await supabase.from('anitracker_db').select('*')
-  if (error) {
-    console.error('Fetch error:', error)
-  } else {
-    is_data_fetched.value = false
-    setTimeout(() => {
-      watchlist.value = data
+  is_data_fetched.value = false // show skeleton at the start
 
-      is_data_fetched.value = true
+  const {
+    data: { user },
+    error: userError,
+  } = await supabase.auth.getUser()
 
-      console.log('fetched', watchlist.value)
-    }, 500)
+  if (userError || !user) {
+    console.error('No user signed in')
+    is_data_fetched.value = true // stop skeleton, but empty data
+    return
   }
+
+  const { data, error } = await supabase.from('anitracker_db').select('*').eq('user_id', user.id)
+
+  if (error) {
+    console.error('Fetch error:', error.message)
+  } else {
+    watchlist.value = data || []
+    console.log('fetched', watchlist.value)
+  }
+
+  is_data_fetched.value = true // hide skeleton once finished
 }
 
 export const watched = computed(() => watchlist.value.filter((item) => item.status === 'Watched'))
@@ -58,6 +68,7 @@ export const watching = computed(() => watchlist.value.filter((item) => item.sta
 export const interested = computed(() =>
   watchlist.value.filter((item) => item.status === 'Interested in'),
 )
+
 // store category/status
 export const selectedStatus = ref('')
 

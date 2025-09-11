@@ -6,7 +6,6 @@ import LoadingIcon from '/public/icons/LoadingIcon.vue'
 import { show_toast } from '../../services/toastServices'
 import { supabase } from '../../lib/supabaseClient'
 
-// defineProps({ switchAuthView: () => {} })
 const emit = defineEmits(['switchForm'])
 
 const loading = ref(false)
@@ -20,10 +19,9 @@ const handleSignIn = () => {
   if (error) {
     console.error('Sign in failed', error.message)
     show_toast('Sign in failed', 'error')
-  } else {
-    show_toast('Sign in successful', 'success')
-    router.push('/profile')
   }
+  show_toast('Sign in successful', 'success')
+  router.push('/profile')
 }
 </script>
 

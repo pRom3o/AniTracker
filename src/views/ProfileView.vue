@@ -8,17 +8,17 @@ import LogoutIcon from '../../public/icons/LogoutIcon.vue'
 import LoadingIcon from '../../public/icons/LoadingIcon.vue'
 import { editAvatar, editAvatarToggle, previewUrl } from '../services/profileServices'
 import { logout } from '../services/authServices'
+import { watchlistStats } from '../services/profileServices'
+import { fetchSupabaseData } from '../services/watchlistServices'
 
 const auth = inject('auth')
 
 const router = useRouter()
 
 const user = ref({})
-const userDetails = ref({})
-const watchlist = ref({})
+const email = ref('')
 const loading = ref(false)
 
-const metaData = ref({})
 const goBack = () => {
   router.push('/')
 }
@@ -29,14 +29,10 @@ const handleLogout = () => {
 }
 onMounted(() => {
   user.value = auth.user
-  metaData.value = user.value.user_metadata
-  userDetails.value = auth.userDetails
-  watchlist.value = auth.watchlist
+  email.value = user.value._value.email
+  fetchSupabaseData()
 
-  console.log('user: ', user)
-
-  console.log('userDetails: ', userDetails)
-  console.log('watchlist: ', watchlist)
+  console.log('watchlist stats: ', watchlistStats.value)
 })
 </script>
 
@@ -57,7 +53,7 @@ onMounted(() => {
             <SettingsIcon />
           </button>
         </div>
-        <div class="w-full md:w-7xl flex items-center flex-col justify-between p-3 space-y-10">
+        <div class="w-full md:min-w-3xl flex items-center flex-col justify-between p-3 space-y-10">
           <div
             class="h-full md:w-[50%] w-full flex flex-col items-center justify-between space-y-2"
           >
@@ -79,21 +75,20 @@ onMounted(() => {
               </div>
             </div>
             <div class="min-h-10 w-full px-4 py-1 cards rounded-2xl">
-              <p>Bio: {{ userDetails.bio ? userDetails.bio : 'empty' }}</p>
+              <p>Bio: {{}}</p>
             </div>
           </div>
           <div
             class="h-full md:w-[50%] w-full flex flex-col items-center justify-center space-y-5 md:space-y-14"
           >
             <div class="w-full flex flex-col space-y-3 px-4 py-2 cards rounded-2xl">
-              <p>Email: {{ metaData.email }}</p>
-              <p>Name: {{ userDetails.name ? userDetails.name : 'empty' }}</p>
+              <p>Email: {{ email }}</p>
+              <p>Name: {{}}</p>
             </div>
             <div class="w-full flex flex-col space-y-3 px-4 py-2 cards rounded-2xl">
-              <p>Total animes: {{ userDetails.total_anime }}</p>
-              <p>Watched animes: {{ watchlist.watched }}</p>
-              <p>Currently atching animes: {{ watchlist.watching }}</p>
-              <p>Interested in animes: {{ watchlist.interested }}</p>
+              <p v-for="(value, key) in watchlistStats" :key="key">
+                {{ key }} animes : {{ value }}
+              </p>
             </div>
           </div>
         </div>

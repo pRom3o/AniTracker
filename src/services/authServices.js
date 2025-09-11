@@ -2,6 +2,7 @@ import { ref } from 'vue'
 import { supabase } from '../lib/supabaseClient'
 // import { show_toast } from './toastServices'
 import { showToast } from './watchlistServices'
+
 // import { previewUrl } from './profileServices'
 
 export const user_email = ref('') // store user email
@@ -42,9 +43,6 @@ export const handleSignUp = async () => {
 
     if (data?.user) {
       console.log('sign up complete: ', data.user.email)
-
-      // ✅ No need to call insertProfile anymore
-      // Supabase trigger will automatically insert into "profiles"
 
       user_email.value = ''
       user_password.value = ''

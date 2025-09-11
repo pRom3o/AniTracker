@@ -1,9 +1,25 @@
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { supabase } from '../lib/supabaseClient'
 import { getUser } from './authServices'
+import { watchlist } from './watchlistServices'
 
 const user = await getUser()
 export const editAvatar = ref(false)
+
+export const watchlistStats = computed(() => {
+  const watched = (watchlist.value || []).filter((item) => item.status === 'Watched').length
+  const watching = (watchlist.value || []).filter((item) => item.status === 'Watching').length
+  const interested = (watchlist.value || []).filter(
+    (item) => item.status === 'Interested in',
+  ).length
+
+  return {
+    watched,
+    watching,
+    interested,
+    total: watched + watching + interested,
+  }
+})
 
 export const editAvatarToggle = () => {
   editAvatar.value = !editAvatar.value

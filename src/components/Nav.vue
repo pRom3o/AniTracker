@@ -5,11 +5,9 @@ import { RouterLink } from 'vue-router'
 import Search from './Search.vue'
 import { searchbar, animeSearch } from '../services/watchlistServices'
 import { toggleDropdown, isDropdownOpen } from '../services/authServices'
-import { useRouter } from 'vue-router'
 
 import ProfileIcon from '/public/icons/ProfileIcon.vue'
 import LogoutIcon from '/public/icons/LogoutIcon.vue'
-import { logout } from '../services/authServices'
 
 const dropDownRef = ref(null)
 const profileButtonRef = ref(null)
@@ -37,12 +35,8 @@ onBeforeUnmount(() => {
   document.removeEventListener('click', handleClickOutside)
 })
 
-const router = useRouter()
-// handle signout
-
 const handleLogout = () => {
-  logout()
-  router.push('/auth')
+  auth.logout()
 }
 </script>
 
@@ -86,7 +80,7 @@ const handleLogout = () => {
         <button @click="toggleDropdown" ref="profileButtonRef"><ProfileIcon /></button>
         <Transition name="search"
           ><div
-            class="absolute top-14 md:-left-[70%] right-0 min-h-36 w-36 background rounded-3xl space-y-5 p-4 flex flex-col items-center justify-evenly"
+            class="absolute top-14 right-0 min-h-36 w-36 background rounded-3xl space-y-5 p-4 flex flex-col items-center justify-evenly"
             v-if="isDropdownOpen"
             ref="dropDownRef"
           >

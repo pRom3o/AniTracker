@@ -1,12 +1,5 @@
 <script setup>
-import {
-  user_email,
-  user_password,
-  userBio,
-  userName,
-  loading,
-  handleSignUp,
-} from '../../services/authServices'
+import { user_email, user_password, loading, handleSignUp } from '../../services/authServices'
 
 import LoadingIcon from '/public/icons/LoadingIcon.vue'
 
@@ -29,25 +22,6 @@ const emit = defineEmits(['switchForm'])
               placeholder="enter your email..."
               class="w-full outline-gray-500 py-3 px-5 rounded-3xl outline"
             />
-          </div>
-          <div class="flex flex-col space-y-3">
-            <label for="userName" class="px-4">Name</label>
-            <input
-              type="text"
-              v-model="userName"
-              placeholder="enter your name..."
-              class="w-full outline-gray-500 py-3 px-5 rounded-3xl outline"
-            />
-          </div>
-          <div class="flex flex-col space-y-3">
-            <label for="userBio" class="px-4">Bio</label>
-            <textarea
-              name="userBio"
-              id="userBio"
-              v-model="userBio"
-              placeholder="enter a short bio..."
-              class="w-full outline-gray-500 py-3 px-5 rounded-3xl outline resize-none"
-            ></textarea>
           </div>
 
           <div class="flex flex-col space-y-3">
