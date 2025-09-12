@@ -1,38 +1,57 @@
 <script setup>
-import { getUser } from '../services/authServices'
 import { onMounted, ref } from 'vue'
-import router from '../router/index'
+import { useRouter } from 'vue-router'
 import { show_toast } from '../services/toastServices'
-import { name, bio, get_profile_data, update_profile_details } from '../services/settingsServices'
+import { name, bio, update_profile_details } from '../services/settingsServices'
+import { profile } from '../composables/useAuth'
+
 import LoadingIcon from '../../public/icons/LoadingIcon.vue'
+import CancelIcon from '../../public/icons/cancelIcon.vue'
 
 const loading = ref(false)
+const router = useRouter()
 const handleUpdate = async () => {
   loading.value = true
-  const result = await update_profile_details(name.value, bio.value)
-  if (result?.length) {
-    router.push('/profile')
-    show_toast('Profile update!!', 'success')
-  } else {
-    show_toast('error updating profile', 'failed')
+  try {
+    const data = await update_profile_details()
+    if (data) {
+      show_toast('Profile update!!', 'success')
+      profile.value = data[0]
+      router.push('/profile')
+      loading.value = false
+    }
+  } catch (error) {
+    show_toast(error.message, 'failed')
+  } finally {
     loading.value = false
   }
 }
 
-onMounted(async () => {
-  await getUser()
-  await get_profile_data()
+const cancelUpdate = () => {
+  router.push('/profile')
+}
+
+onMounted(() => {
+  if (profile.value) {
+    name.value = profile.value.name
+    bio.value = profile.value.bio
+  }
 })
 </script>
 
 <template>
   <div class="min-h-screen w-full flex items-center justify-center background-auth text-gray-300">
     <div class="flex flex-col items-center justify-center h-full w-full p-2">
+      <div class="min-w-96 flex items-center justify-end mb-3">
+        <button class="p-2 rounded-full cards cursor-pointer" @click="cancelUpdate">
+          <CancelIcon />
+        </button>
+      </div>
       <div class="min-h-70 min-w-96 flex flex-col items-center justify-center space-y-10 cards p-4">
         <h1 class="text-2xl font-medium header">Edit profile details</h1>
         <div class="flex flex-col items-start space-y-3 w-full">
           <label for="name">Name</label>
-          <input type="text" v-model="name" class="w-full rounded-xl p-2" />
+          <input type="text" v-model="name" class="w-full rounded-xl p-2" v-html="name" />
         </div>
         <div class="flex flex-col items-start space-y-3 w-full">
           <label for="name" class="p-1 text-md">Bio</label>
@@ -41,6 +60,7 @@ onMounted(async () => {
             id="bio"
             v-model="bio"
             class="min-h-30 w-full p-2 resize-none rounded-xl"
+            v-html="bio"
           ></textarea>
         </div>
         <button

@@ -4,10 +4,12 @@ import { onMounted, ref, onBeforeUnmount, inject } from 'vue'
 import { RouterLink } from 'vue-router'
 import Search from './Search.vue'
 import { searchbar, animeSearch } from '../services/watchlistServices'
-import { toggleDropdown, isDropdownOpen } from '../services/authServices'
+import { toggleDropdown, isDropdownOpen, goToAuth } from '../services/authServices'
 
 import ProfileIcon from '/public/icons/ProfileIcon.vue'
 import LogoutIcon from '/public/icons/LogoutIcon.vue'
+import { profile } from '../composables/useAuth'
+import { previewUrl } from '../services/profileServices'
 
 const dropDownRef = ref(null)
 const profileButtonRef = ref(null)
@@ -37,6 +39,7 @@ onBeforeUnmount(() => {
 
 const handleLogout = () => {
   auth.logout()
+  goToAuth()
 }
 </script>
 
@@ -76,8 +79,10 @@ const handleLogout = () => {
       </li>
     </div>
     <div class="md:min-w-[5%] flex justify-center p-2 hover:backdrop-blur-lg rounded-full relative">
-      <div v-if="user" class="flex items-center justify-center">
-        <button @click="toggleDropdown" ref="profileButtonRef"><ProfileIcon /></button>
+      <div v-if="profile" class="flex items-center justify-center">
+        <button @click="toggleDropdown" ref="profileButtonRef" class="p-2 rounded-full">
+          <img :src="previewUrl" alt="user" />
+        </button>
         <Transition name="search"
           ><div
             class="absolute top-14 right-0 min-h-36 w-36 background rounded-3xl space-y-5 p-4 flex flex-col items-center justify-evenly"

@@ -3,7 +3,6 @@ import { supabase } from '../lib/supabaseClient'
 import { getUser } from './authServices'
 import { watchlist } from './watchlistServices'
 
-const user = await getUser()
 export const editAvatar = ref(false)
 
 export const watchlistStats = computed(() => {
@@ -25,17 +24,18 @@ export const editAvatarToggle = () => {
   editAvatar.value = !editAvatar.value
   console.log(editAvatar.value)
 }
-
 export const uploadAvatar = async (file, userId) => {
   const fileExt = file.name.split('.').pop()
   const fileName = `${userId}.${fileExt}`
   const filePath = `avatars/${fileName}`
 
+  // delete old file first (optional)
+  await supabase.storage.from('avatars').remove([filePath])
+
   // Upload the file
-  const { error: uploadError } = await supabase.storage.from('avatars').upload(filePath, file, {
-    upsert: true,
-    contentType: file.type,
-  })
+  const { error: uploadError } = await supabase.storage
+    .from('avatars')
+    .upload(filePath, file, { contentType: file.type })
 
   if (uploadError) {
     console.error('Upload error:', uploadError.message)
@@ -45,21 +45,21 @@ export const uploadAvatar = async (file, userId) => {
   // Get public URL
   const { data } = supabase.storage.from('avatars').getPublicUrl(filePath)
   if (!data || !data.publicUrl) {
-    console.error('Publc Url not found', data)
+    console.error('Public Url not found', data)
     return null
   }
+
   return data.publicUrl
 }
 
 export const selectedFile = ref(null)
-export const previewUrl = ref(null)
+export const previewUrl = ref('')
 
 export const handleFileChange = (e) => {
   const file = e.target.files[0]
   if (!file) return
-
   selectedFile.value = file
-  previewUrl.value = URL.createObjectURL(file)
+  previewUrl.value = URL.createObjectURL(file) // preview before upload
 }
 
 export const uploadAvatarNow = async () => {
@@ -67,28 +67,15 @@ export const uploadAvatarNow = async () => {
     alert('Please select a file first')
     return
   }
-
-  // const userId = userSession.value?.user?.id
-  const file = selectedFile.value
-
-  const fileExt = file.name.split('.').pop()
-  const fileName = `${user.id}.${fileExt}`
-  const filePath = `avatars/${fileName}`
-
-  const { error: uploadError } = await supabase.storage.from('avatars').upload(filePath, file, {
-    upsert: true,
-    contentType: file.type,
-  })
-
-  if (uploadError) {
-    console.error('Upload failed:', uploadError.message)
-    alert('Upload failed!')
+  const user = await getUser()
+  if (!user) {
+    alert('No logged-in user found')
     return
   }
 
-  const { data } = supabase.storage.from('avatars').getPublicUrl(filePath)
-  if (data?.publicUrl) {
-    previewUrl.value = data.publicUrl || null
+  const publicUrl = await uploadAvatar(selectedFile.value, user.id)
+  if (publicUrl) {
+    previewUrl.value = publicUrl
     alert('Avatar uploaded successfully!')
   } else {
     alert('Something went wrong fetching avatar URL')
@@ -105,13 +92,4 @@ export async function getWatchlistItems(user_Id) {
   const interested = data.filter((item) => item.status === 'Interested in')
 
   return { watched: watched, watching: watching, interested: interested }
-}
-
-export async function getProfile(user_Id) {
-  const { data, error } = await supabase.from('profiles').select('*').eq('id', user_Id)
-
-  if (error) throw error
-
-  console.log(data)
-  return data
 }

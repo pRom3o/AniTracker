@@ -1,24 +1,9 @@
 <script setup>
 import { RouterView } from 'vue-router'
 import { toastMessage, toastType } from '@/services/watchlistServices'
-// import { onMounted, watchEffect, inject } from 'vue'
 
 import Toast from './components/Toast.vue'
 import UserProvider from './components/providers/UserProvider.vue'
-
-// const router = useRouter()
-// const auth = inject('auth')
-
-// onMounted(() => {
-//   watchEffect(() => {
-//     if (auth && !auth.loading && !auth.user) {
-//       console.log('user not found')
-//       router.push('/auth')
-//     }
-//     console.log('user found')
-//     router.push('/')
-//   })
-// })
 </script>
 
 <template>
@@ -36,6 +21,6 @@ import UserProvider from './components/providers/UserProvider.vue'
   </div>
   <Toast />
   <UserProvider>
-    <RouterView class="font-kanit" />
+    <RouterView class="font-kanit" :key="$route.fullPath" />
   </UserProvider>
 </template>

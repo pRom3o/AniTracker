@@ -3,6 +3,7 @@ import { supabase } from '../lib/supabaseClient'
 // import { show_toast } from './toastServices'
 import { showToast } from './watchlistServices'
 
+import { useRouter } from 'vue-router'
 // import { previewUrl } from './profileServices'
 
 export const user_email = ref('') // store user email
@@ -107,4 +108,9 @@ export async function initAuth() {
     console.log('Active session: ', data.session)
   }
   return data
+}
+
+export const goToAuth = () => {
+  const router = useRouter()
+  router.push('/auth')
 }
