@@ -64,7 +64,7 @@ onMounted(() => {
           ></textarea>
         </div>
         <button
-          class="w-full cards p-2 rounded-2xl hover:bg-black/80 cursor-pointer"
+          class="w-full card p-2 rounded-2xl hover:bg-black/30 bg-blue-500/10 cursor-pointer"
           @click="handleUpdate"
           v-if="loading == false"
         >
@@ -89,6 +89,11 @@ onMounted(() => {
   min-height: 100vh;
 }
 
+.card {
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+}
 .cards {
   background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(10px);
