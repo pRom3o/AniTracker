@@ -26,6 +26,7 @@ export async function getProfile() {
     .maybeSingle()
 
   if (error) throw error
+  console.log('fetched data', data)
   return data
 }
 
@@ -33,6 +34,7 @@ export async function getProfile() {
 watch(authUser, async (newUser) => {
   if (newUser) {
     profile.value = await getProfile()
+    console.log('profile from useAuth: ', profile.value)
   } else {
     profile.value = null
   }

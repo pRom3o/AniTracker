@@ -9,7 +9,6 @@ import { toggleDropdown, isDropdownOpen, goToAuth } from '../services/authServic
 import ProfileIcon from '/public/icons/ProfileIcon.vue'
 import LogoutIcon from '/public/icons/LogoutIcon.vue'
 import { profile } from '../composables/useAuth'
-import { previewUrl } from '../services/profileServices'
 
 const dropDownRef = ref(null)
 const profileButtonRef = ref(null)
@@ -80,8 +79,16 @@ const handleLogout = () => {
     </div>
     <div class="md:min-w-[5%] flex justify-center p-2 hover:backdrop-blur-lg rounded-full relative">
       <div v-if="profile" class="flex items-center justify-center">
-        <button @click="toggleDropdown" ref="profileButtonRef" class="p-2 rounded-full">
-          <img :src="previewUrl" alt="user" />
+        <button
+          @click="toggleDropdown"
+          ref="profileButtonRef"
+          class="p-2 rounded-full w-14 h-14 flex items-center justify-center"
+        >
+          <img
+            :src="profile.avatar_url"
+            alt="user"
+            class="object-cover inset-0 rounded-full h-full w-full"
+          />
         </button>
         <Transition name="search"
           ><div

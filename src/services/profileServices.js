@@ -1,7 +1,8 @@
 import { ref, computed } from 'vue'
 import { supabase } from '../lib/supabaseClient'
-import { getUser } from './authServices'
+
 import { watchlist } from './watchlistServices'
+import { profile } from '../composables/useAuth'
 
 export const editAvatar = ref(false)
 
@@ -24,10 +25,11 @@ export const editAvatarToggle = () => {
   editAvatar.value = !editAvatar.value
   console.log(editAvatar.value)
 }
-export const uploadAvatar = async (file, userId) => {
+
+export const uploadAvatar = async (file, id) => {
   const fileExt = file.name.split('.').pop()
-  const fileName = `${userId}.${fileExt}`
-  const filePath = `avatars/${fileName}`
+  const fileName = `profiles/${id}.${fileExt}`
+  const filePath = fileName
 
   // delete old file first (optional)
   await supabase.storage.from('avatars').remove([filePath])
@@ -35,21 +37,28 @@ export const uploadAvatar = async (file, userId) => {
   // Upload the file
   const { error: uploadError } = await supabase.storage
     .from('avatars')
-    .upload(filePath, file, { contentType: file.type })
+    .upload(filePath, file, { contentType: file.type, upsert: true })
 
   if (uploadError) {
     console.error('Upload error:', uploadError.message)
+    alert(`Upload error : ${uploadError.message}`)
     return null
   }
 
-  // Get public URL
-  const { data } = supabase.storage.from('avatars').getPublicUrl(filePath)
-  if (!data || !data.publicUrl) {
-    console.error('Public Url not found', data)
+  // Create a signed URL valid for 1 year (31,536,000 seconds)
+  const { data, error: signedUrlError } = await supabase.storage
+    .from('avatars')
+    .createSignedUrl(filePath, 60 * 60 * 24 * 365)
+
+  if (signedUrlError) {
+    console.error('Signed URL error:', signedUrlError.message)
     return null
   }
 
-  return data.publicUrl
+  console.log('file name from upload', fileName)
+  console.log('signedUrl from upload', data.signedUrl)
+
+  return data.signedUrl
 }
 
 export const selectedFile = ref(null)
@@ -62,23 +71,37 @@ export const handleFileChange = (e) => {
   previewUrl.value = URL.createObjectURL(file) // preview before upload
 }
 
+export const uploading = ref(false)
 export const uploadAvatarNow = async () => {
   if (!selectedFile.value) {
     alert('Please select a file first')
     return
   }
-  const user = await getUser()
-  if (!user) {
-    alert('No logged-in user found')
+  if (!profile) {
+    alert('No logged-in profile found')
     return
   }
 
-  const publicUrl = await uploadAvatar(selectedFile.value, user.id)
-  if (publicUrl) {
-    previewUrl.value = publicUrl
-    alert('Avatar uploaded successfully!')
-  } else {
-    alert('Something went wrong fetching avatar URL')
+  uploading.value = true
+  try {
+    const signedUrl = await uploadAvatar(selectedFile.value, profile.value.id)
+    if (signedUrl) {
+      previewUrl.value = signedUrl
+      alert('Avatar uploaded successfully!')
+      const { error } = await supabase
+        .from('profiles')
+        .update({ avatar_url: signedUrl })
+        .eq('id', profile.value.id)
+      if (error) {
+        alert(`error updating avatar:  ${error.message}`)
+      } else {
+        profile.value.avatar_url = signedUrl
+      }
+    }
+  } catch (error) {
+    console.log('error: ', error.message)
+  } finally {
+    uploading.value = false
   }
 }
 

@@ -7,12 +7,7 @@ import editAvatarModal from '../components/Profile/editAvatarModal.vue'
 import LogoutIcon from '../../public/icons/LogoutIcon.vue'
 import editIcon from '../../public/icons/editIcon.vue'
 import LoadingIcon from '../../public/icons/LoadingIcon.vue'
-import {
-  editAvatar,
-  editAvatarToggle,
-  previewUrl,
-  watchlistStats,
-} from '../services/profileServices'
+import { editAvatar, editAvatarToggle, watchlistStats } from '../services/profileServices'
 import { getProfile, profile } from '../composables/useAuth'
 import { logout } from '../services/authServices'
 
@@ -37,15 +32,16 @@ const handleLogout = () => {
   }
 }
 
-onMounted(() => {
-  getProfile()
+onMounted(async () => {
+  await getProfile()
   user.value = auth.user
   email.value = user.value._value.email
+  console.log('profile from profileView', profile.value)
+  console.log('profile avatar: ', profile.value.avatar_url)
   fetchSupabaseData()
   if (profile) {
     router.push('/profile')
   }
-  console.log('watchlist stats: ', watchlistStats.value)
 })
 </script>
 
@@ -75,8 +71,8 @@ onMounted(() => {
                 class="h-56 w-56 rounded-full cards p-4 flex items-center justify-center relative"
               >
                 <img
-                  v-if="previewUrl"
-                  :src="previewUrl"
+                  v-if="profile && profile.avatar_url"
+                  :src="profile.avatar_url"
                   alt="User Avatar"
                   class="object-cover inset-0 rounded-full h-full w-full"
                 />
@@ -151,7 +147,7 @@ onMounted(() => {
           </div>
         </div>
       </div>
-      <div class="flex items-center justify-end w-full p-3 animate-pulse p-3 opacity-70">
+      <div class="flex items-center justify-end w-full p-3 animate-pulse opacity-70">
         <button
           class="bg-red-500/50 flex justify-between items-center px-8 py-4 rounded-3xl text-sm space-x-1"
         ></button>

@@ -4,8 +4,9 @@ import {
   previewUrl,
   handleFileChange,
   uploadAvatarNow,
+  uploading,
 } from '../../services/profileServices'
-// import uploadIcon from '/public/icons/uploadIcon.vue'
+import LoadingIcon from '../../../public/icons/LoadingIcon.vue'
 </script>
 
 <template>
@@ -30,6 +31,13 @@ import {
 
         <!-- Upload Button -->
         <button
+          v-if="uploading"
+          class="mt-4 bg-blue-500/70 px-4 py-2 rounded-xl text-white hover:bg-blue-700"
+        >
+          <LoadingIcon />
+        </button>
+        <button
+          v-else
           @click="uploadAvatarNow"
           class="mt-4 bg-blue-500/70 px-4 py-2 rounded-xl text-white hover:bg-blue-700"
         >
