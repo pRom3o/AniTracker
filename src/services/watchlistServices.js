@@ -114,7 +114,7 @@ export const removeFromWatchlist = async (id) => {
   if (error) {
     showToast(`delete error, ${data.name}`, 'error')
   } else {
-    showToast(`Deleted ${data.name}`, 'error')
+    showToast('Deleted', 'error')
 
     fetchSupabaseData() // refresh list
   }
