@@ -22,7 +22,6 @@ const handleSignUp = async () => {
       showToast('Signup success', 'success')
       router.push('/profile')
       showToast(`welcome ${user_email.value}`, 'success')
-
       user_email.value = ''
       user_password.value = ''
     }
