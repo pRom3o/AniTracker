@@ -117,7 +117,7 @@ onMounted(async () => {
     >
       <div class="h-full w-full flex items-center flex-col space-y-10 mt-20">
         <div
-          class="fixed top-0 left-0 h-16 w-full border-b border-gray-800 flex justify-between items-center p-4 background"
+          class="fixed top-0 left-0 z-10 h-16 w-full border-b border-gray-800 flex justify-between items-center p-4 background"
         >
           <div class="flex items-center space-x-4">
             <button @click="goBack">
