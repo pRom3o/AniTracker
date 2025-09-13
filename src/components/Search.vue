@@ -13,6 +13,7 @@ import {
   selectedStatus,
   addAnime,
 } from '../services/watchlistServices'
+import { showToast } from '../services/toastServices'
 
 // reactive variable to hold the fetched anime data
 const animeResults = ref([])
@@ -37,7 +38,7 @@ const debounced = debounce(async function fetchanime() {
     animeResults.value = data.data
   } catch (error) {
     // Handle any errors if the request fails
-    console.error('Error fetching anime:', error)
+    showToast(`Error fetching anime, ${error}`, 'error')
   } finally {
     loading.value = false
   }

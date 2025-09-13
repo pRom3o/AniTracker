@@ -1,26 +1,22 @@
 <script setup>
 import { ref } from 'vue'
-import { user_email, user_password } from '@/services/authServices'
+import { user_email, user_password, signInUser } from '@/services/authServices'
 import { useRouter } from 'vue-router'
 import LoadingIcon from '/public/icons/LoadingIcon.vue'
-import { show_toast } from '../../services/toastServices'
-import { supabase } from '../../lib/supabaseClient'
+import { showToast } from '../../services/toastServices'
 
 const emit = defineEmits(['switchForm'])
 
 const loading = ref(false)
 const router = useRouter()
 
-const handleSignIn = () => {
-  const { error } = supabase.auth.signInWithPassword({
-    email: user_email.value,
-    password: user_password.value,
-  })
+const handleSignIn = async () => {
+  loading.value = true
+  const { error } = await signInUser(user_email.value, user_password.value)
   if (error) {
-    console.error('Sign in failed', error.message)
-    show_toast('Sign in failed', 'error')
+    showToast('Sign in failed', 'error')
   }
-  show_toast('Sign in successful', 'success')
+  showToast('Sign in successful', 'success')
   router.push('/profile')
 }
 </script>

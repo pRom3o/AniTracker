@@ -4,7 +4,7 @@ import { onMounted, ref, onBeforeUnmount, inject } from 'vue'
 import { RouterLink } from 'vue-router'
 import Search from './Search.vue'
 import { searchbar, animeSearch } from '../services/watchlistServices'
-import { toggleDropdown, isDropdownOpen, goToAuth } from '../services/authServices'
+import { toggleDropdown, isDropdownOpen, handleLogout } from '../services/authServices'
 
 import ProfileIcon from '/public/icons/ProfileIcon.vue'
 import LogoutIcon from '/public/icons/LogoutIcon.vue'
@@ -35,11 +35,6 @@ onMounted(() => {
 onBeforeUnmount(() => {
   document.removeEventListener('click', handleClickOutside)
 })
-
-const handleLogout = () => {
-  auth.logout()
-  goToAuth()
-}
 </script>
 
 <template>

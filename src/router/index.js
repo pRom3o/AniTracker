@@ -2,10 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import AuthView from '../views/AuthView.vue'
 import DetailsView from '../views/DetailsView.vue'
-// import { supabase } from '../lib/supabaseClient'
-// import { inject } from 'vue'
-
-// const auth = inject('auth')
+import { supabase } from '../lib/supabaseClient'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -47,15 +44,17 @@ const router = createRouter({
   ],
 })
 
-// router.beforeEach((to, from, next) => {
-//   if (!auth || (auth && !auth.user && to.meta.requiresAuth)) {
-//     if (to.path !== '/auth') {
-//       next('/auth')
-//     } else {
-//       next()
-//     }
-//   } else {
-//     next()
-//   }
-// })
+router.beforeEach(async (to, from, next) => {
+  if (to.matched.some((record) => record.meta.requiresAuth)) {
+    const { data } = await supabase.auth.getUser()
+
+    if (!data.user) {
+      // not logged in → redirect to auth
+      return next('/auth')
+    }
+  }
+
+  next()
+})
+
 export default router

@@ -1,7 +1,7 @@
 <script setup>
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { show_toast } from '../services/toastServices'
+import { showToast } from '../services/toastServices'
 import { name, bio, update_profile_details } from '../services/settingsServices'
 import { profile } from '../composables/useAuth'
 
@@ -15,13 +15,13 @@ const handleUpdate = async () => {
   try {
     const data = await update_profile_details()
     if (data) {
-      show_toast('Profile update!!', 'success')
+      showToast('Profile update!!', 'success')
       profile.value = data[0]
       router.push('/profile')
       loading.value = false
     }
   } catch (error) {
-    show_toast(error.message, 'failed')
+    showToast(error.message, 'failed')
   } finally {
     loading.value = false
   }

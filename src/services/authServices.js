@@ -1,10 +1,9 @@
 import { ref } from 'vue'
 import { supabase } from '../lib/supabaseClient'
-// import { show_toast } from './toastServices'
-import { showToast } from './watchlistServices'
 
 import { useRouter } from 'vue-router'
-// import { previewUrl } from './profileServices'
+import { showToast } from './toastServices'
+const router = useRouter()
 
 export const user_email = ref('') // store user email
 export const user_password = ref('') // store password
@@ -26,37 +25,12 @@ export const signUpUser = async (email, password) => {
 
   if (error) throw error
 
-  return data
+  return { user: data.user, session: data.session }
 }
 
 export const userBio = ref('')
 export const userName = ref('')
 export const loading = ref(false)
-
-export const handleSignUp = async () => {
-  loading.value = true
-  console.log('signing up')
-
-  try {
-    const { data, error } = await signUpUser(user_email.value, user_password.value)
-
-    if (error) throw error
-
-    if (data?.user) {
-      console.log('sign up complete: ', data.user.email)
-
-      user_email.value = ''
-      user_password.value = ''
-      showToast('Signup success', 'success')
-    }
-  } catch (err) {
-    showToast(err.message || 'Signup failed', 'failed')
-    console.error('Sign up failed: ', err.message)
-  } finally {
-    loading.value = false
-  }
-}
-// sign up functions end
 
 // sign out function
 export const signOutUser = async () => {
@@ -81,36 +55,26 @@ export async function getUser() {
     error,
   } = await supabase.auth.getUser()
   if (user) {
-    console.log('Logged-in user:', user)
+    showToast(`welcome back ${user_email.value}`, 'success')
     return user
   } else if (error) {
-    console.error('Error getting user:', error.message)
+    showToast(`Error getting user: ${error.message}`, 'failed')
   }
 }
 
 export async function logout() {
   const { error } = await supabase.auth.signOut()
   if (error) {
-    console.error('Logout error:', error.message)
+    showToast('Logout error:', 'failed')
     return false
   }
 
   return true
 }
 
-export async function initAuth() {
-  const { data, error } = await supabase.auth.getSession()
-  if (error) {
-    console.log('Error fetching session', error.message)
-    return
+export const handleLogout = async () => {
+  const success = await logout()
+  if (success) {
+    router.push('/auth')
   }
-  if (data.session) {
-    console.log('Active session: ', data.session)
-  }
-  return data
-}
-
-export const goToAuth = () => {
-  const router = useRouter()
-  router.push('/auth')
 }

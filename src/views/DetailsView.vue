@@ -28,7 +28,6 @@ onMounted(() => {
 
 onMounted(async () => {
   banner.value = await fetchAniListBanner(Number(route.params.id))
-  console.log('recommendations: ', recommendations.value)
 })
 </script>
 

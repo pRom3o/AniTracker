@@ -43,10 +43,7 @@ onMounted(() => {
   loading.value = false
 
   supabase.auth.onAuthStateChange((_event, session) => {
-    console.log('event', _event)
-    console.log('session', session)
     user.value = session?.user ?? null
-    console.log('user', user.value)
   })
 })
 

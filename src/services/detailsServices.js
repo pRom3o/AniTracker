@@ -1,4 +1,5 @@
 import { ref } from 'vue'
+import { showToast } from './toastServices'
 
 export const animeDetails = ref({
   title: '',
@@ -42,9 +43,8 @@ export const fetchAnimeDetails = async (id) => {
     animeDetails.value.demographics = data.data.demographics.map((d) => d.name)
     animeDetails.value.themes = data.data.themes.map((t) => t.name)
     animeDetails.value.genres = data.data.genres
-    console.log('anime details: ', animeDetails.value)
   } catch (error) {
-    console.log('error: ', error.message)
+    showToast(`error: ${error.message}`, 'failed')
   }
 }
 
@@ -78,6 +78,6 @@ export const recommendationsById = async (id) => {
     const data = await response.json()
     recommendations.value = data.data.slice(0, 20)
   } catch (error) {
-    console.log('error: ', error.message)
+    showToast(`error: ${error.message}`, 'failed')
   }
 }

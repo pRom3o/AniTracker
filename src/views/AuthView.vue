@@ -8,12 +8,7 @@ const loading = ref(true)
 
 const auth = inject('auth')
 const router = useRouter()
-// const currentAuthView = ref('login')
 
-// const switchAuthView = (page) => {
-//   console.log('page', page)
-//   currentAuthView.value = page
-// }
 const isLogin = ref(true)
 
 function handleSwitch() {

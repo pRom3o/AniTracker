@@ -3,6 +3,7 @@ import { supabase } from '../lib/supabaseClient'
 
 import { watchlist } from './watchlistServices'
 import { profile } from '../composables/useAuth'
+import { showToast } from './toastServices'
 
 export const editAvatar = ref(false)
 
@@ -23,7 +24,6 @@ export const watchlistStats = computed(() => {
 
 export const editAvatarToggle = () => {
   editAvatar.value = !editAvatar.value
-  console.log(editAvatar.value)
 }
 
 export const uploadAvatar = async (file, id) => {
@@ -40,7 +40,6 @@ export const uploadAvatar = async (file, id) => {
     .upload(filePath, file, { contentType: file.type, upsert: true })
 
   if (uploadError) {
-    console.error('Upload error:', uploadError.message)
     alert(`Upload error : ${uploadError.message}`)
     return null
   }
@@ -51,12 +50,8 @@ export const uploadAvatar = async (file, id) => {
     .createSignedUrl(filePath, 60 * 60 * 24 * 365)
 
   if (signedUrlError) {
-    console.error('Signed URL error:', signedUrlError.message)
     return null
   }
-
-  console.log('file name from upload', fileName)
-  console.log('signedUrl from upload', data.signedUrl)
 
   return data.signedUrl
 }
@@ -99,7 +94,7 @@ export const uploadAvatarNow = async () => {
       }
     }
   } catch (error) {
-    console.log('error: ', error.message)
+    alert(`error uploading, try again: ${error.message}`)
   } finally {
     uploading.value = false
   }
@@ -115,4 +110,39 @@ export async function getWatchlistItems(user_Id) {
   const interested = data.filter((item) => item.status === 'Interested in')
 
   return { watched: watched, watching: watching, interested: interested }
+}
+
+export const deleteAvatar = async (id) => {
+  try {
+    // File path (assuming you're saving avatars under `profiles/{id}.ext`)
+    const { data: profileData, error: fetchError } = await supabase
+      .from('profiles')
+      .select('avatar_url')
+      .eq('id', id)
+      .single()
+
+    if (fetchError) throw fetchError
+    if (!profileData?.avatar_url) return
+
+    // Extract file path from the URL
+    const filePath = profileData.avatar_url.split('/avatars/')[1]
+
+    // Remove from storage
+    const { error: storageError } = await supabase.storage.from('avatars').remove([filePath])
+
+    if (storageError) throw storageError
+
+    // Remove avatar_url from profiles table
+    const { error: updateError } = await supabase
+      .from('profiles')
+      .update({ avatar_url: null })
+      .eq('id', id)
+
+    if (updateError) throw updateError
+
+    return true
+  } catch (err) {
+    showToast(`Error deleting avatar, ${err.message}`, 'error')
+    return false
+  }
 }

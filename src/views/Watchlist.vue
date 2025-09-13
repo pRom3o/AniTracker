@@ -34,16 +34,16 @@ onMounted(() => {
     <Nav />
     <div v-if="is_data_fetched == false" class="md:mt-28 mt-10 mb-8">
       <div class="flex items-center justify-center md:p-6 p-3 mt-20">
-        <div class="grid lg:grid-cols-6 md:grid-cols-5 grid-cols-3 md:w-[80%] gap-2 w-full mt-5">
+        <div class="grid lg:grid-cols-6 grid-cols-3 md:w-[80%] gap-2 w-full mt-5">
           <div
-            class="flex flex-col md:h-80 md:w-64 min-h-52 min-w-32 background backdrop-blur-3xl shadow-lg rounded-3xl animate-pulse"
+            class="flex flex-col md:h-68 md:w-54 min-h-52 min-w-26 background backdrop-blur-3xl shadow-lg rounded-3xl animate-pulse"
             v-for="_ in arr"
             :key="_"
           ></div>
         </div>
       </div>
     </div>
-    <div class="py-6 px-4 flex-1 mt-5" v-else>
+    <div class="py-6 px-4 flex-1 md:mt-5 mt-8" v-else>
       <div v-if="watchlist.length == 0" class="flex items-center justify-center h-[80vh]">
         <h1 class="md:text-4xl header"><i>Nothing in your watchlist...</i></h1>
       </div>

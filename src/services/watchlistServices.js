@@ -1,6 +1,7 @@
 import { ref, computed } from 'vue'
 import { supabase } from '../lib/supabaseClient'
-import { getUser, user_email } from './authServices'
+import { user_email } from './authServices'
+import { profile } from '../composables/useAuth'
 
 export const watchlist = ref([]) // watchlist
 export const isOpen = ref(false) // ref to track category modal state
@@ -46,7 +47,6 @@ export const fetchSupabaseData = async () => {
   } = await supabase.auth.getUser()
 
   if (userError || !user) {
-    console.error('No user signed in')
     is_data_fetched.value = true // stop skeleton, but empty data
     return
   }
@@ -54,10 +54,9 @@ export const fetchSupabaseData = async () => {
   const { data, error } = await supabase.from('anitracker_db').select('*').eq('user_id', user.id)
 
   if (error) {
-    console.error('Fetch error:', error.message)
+    return
   } else {
     watchlist.value = data || []
-    console.log('fetched', watchlist.value)
   }
 
   is_data_fetched.value = true // hide skeleton once finished
@@ -84,7 +83,7 @@ export const addAnime = (anime) => {
 // Async function to insert to supabase db
 export const addToWatchlist = async () => {
   handleCategoryModal()
-  const { data, error } = await supabase
+  const { error } = await supabase
     .from('anitracker_db')
     .insert([
       {
@@ -94,14 +93,13 @@ export const addToWatchlist = async () => {
         rating: selectedAnime.value.score,
         episodes: selectedAnime.value.episodes,
         user_email: user_email.value,
-        user_id: (await getUser()).id,
+        user_id: profile.value.id,
       },
     ])
     .select('*')
   if (error) {
-    console.log('Insert Error', error.message)
+    showToast('Insert Error', 'failed')
   } else {
-    console.log('Inserted', data)
     showToast('Anime added successfully!', 'success')
     fetchSupabaseData()
     selectedStatus.value = ''
@@ -114,27 +112,27 @@ export const removeFromWatchlist = async (id) => {
   const { data, error } = await supabase.from('anitracker_db').delete().eq('id', id).select('*')
   watchlist.value = watchlist.value.filter((items) => items.id !== id)
   if (error) {
-    console.error('delete error:', error)
+    showToast(`delete error, ${data.name}`, 'error')
   } else {
-    showToast('Deleted', 'error')
-    console.log('deleted:', data)
+    showToast(`Deleted ${data.name}`, 'error')
+
     fetchSupabaseData() // refresh list
   }
 }
 
 // Async function to update category in supabase db
 export const updatestatus = async (id, status) => {
-  const { data, error } = await supabase
+  const { error } = await supabase
     .from('anitracker_db')
     .update({ status: status })
     .eq('id', id)
     .select('*')
 
   if (error) {
-    console.error('update error:', error)
+    showToast(`delete error, ${error.message}`, 'error')
   } else {
     showToast('Status updated successfully!', 'success')
-    console.log('Updated:', data)
+
     fetchSupabaseData() // refresh list
   }
 }

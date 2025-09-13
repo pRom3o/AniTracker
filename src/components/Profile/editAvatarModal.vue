@@ -5,8 +5,31 @@ import {
   handleFileChange,
   uploadAvatarNow,
   uploading,
+  deleteAvatar,
 } from '../../services/profileServices'
 import LoadingIcon from '../../../public/icons/LoadingIcon.vue'
+import { profile } from '../../composables/useAuth'
+import { ref } from 'vue'
+
+const deleting = ref(false)
+const handleDeleteAvatar = async () => {
+  if (!profile.value?.id) return
+
+  deleting.value = true
+
+  try {
+    const success = await deleteAvatar(profile.value.id)
+    if (success) {
+      profile.value.avatar_url = null
+      previewUrl.value = null
+      alert('Avatar deleted successfully')
+    }
+  } catch (error) {
+    alert(`error deleting avatar: ${error.message}`)
+  } finally {
+    deleting.value = false
+  }
+}
 </script>
 
 <template>
@@ -27,7 +50,11 @@ import LoadingIcon from '../../../public/icons/LoadingIcon.vue'
         </label>
 
         <!-- Show preview if selected -->
-        <img v-if="previewUrl" :src="previewUrl" class="mt-4 h-32 w-32 rounded-full object-cover" />
+        <img
+          v-if="previewUrl || profile.avatar_url"
+          :src="previewUrl || profile.avatar_url"
+          class="mt-4 h-32 w-32 rounded-full object-cover"
+        />
 
         <!-- Upload Button -->
         <button
@@ -42,6 +69,16 @@ import LoadingIcon from '../../../public/icons/LoadingIcon.vue'
           class="mt-4 bg-blue-500/70 px-4 py-2 rounded-xl text-white hover:bg-blue-700"
         >
           Upload Avatar
+        </button>
+        <button
+          v-if="profile.avatar_url && !deleting"
+          @click="handleDeleteAvatar"
+          class="bg-red-500 text-white px-3 py-1 rounded"
+        >
+          Delete Avatar
+        </button>
+        <button v-else-if="deleting" class="bg-red-500 text-white px-3 py-1 rounded">
+          <LoadingIcon />
         </button>
       </div>
     </div>

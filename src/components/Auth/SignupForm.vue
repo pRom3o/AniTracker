@@ -1,9 +1,37 @@
 <script setup>
-import { user_email, user_password, loading, handleSignUp } from '../../services/authServices'
+import { useRouter } from 'vue-router'
+import { user_email, user_password, loading, signUpUser } from '../../services/authServices'
+import { showToast } from '../../services/toastServices'
+
+const router = useRouter()
 
 import LoadingIcon from '/public/icons/LoadingIcon.vue'
 
 const emit = defineEmits(['switchForm'])
+
+const handleSignUp = async () => {
+  loading.value = true
+  showToast('signing up', 'success')
+
+  try {
+    const { user, error } = await signUpUser(user_email.value, user_password.value)
+
+    if (error) throw error
+
+    if (user) {
+      showToast('Signup success', 'success')
+      router.push('/profile')
+      showToast(`welcome ${user_email.value}`, 'success')
+
+      user_email.value = ''
+      user_password.value = ''
+    }
+  } catch (err) {
+    showToast(err.message || 'Signup failed', 'failed')
+  } finally {
+    loading.value = false
+  }
+}
 </script>
 
 <template>

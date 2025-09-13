@@ -1,6 +1,7 @@
 <script setup>
 import Nav from '@/components/Nav.vue'
 import { onMounted, ref } from 'vue'
+import { showToast } from '../services/toastServices'
 
 const recommendations = ref([])
 
@@ -12,9 +13,8 @@ const getRecommendations = async () => {
     const data = await response.json()
     // flatten entries into a single array
     recommendations.value = data.data.flatMap((rec) => rec.entry)
-    console.log(recommendations.value)
   } catch (error) {
-    console.error('Error fetching recommendations:', error.message)
+    showToast(`Error fetching recommendations: ${error.message}`, 'failed')
   }
 }
 
