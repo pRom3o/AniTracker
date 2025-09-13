@@ -236,7 +236,7 @@ const debounced = debounce(async function fetchanime() {
     <Transition name="fade-slide" appear
       ><div
         v-if="isOpen"
-        class="flex items-center justify-center fixed inset-0 z-60 bg-black/20"
+        class="flex items-center justify-center fixed inset-0 z-60 bg-black/30"
         @click="handleCategoryModal()"
       >
         <div class="backdrop-blur-3xl h-full w-full flex items-center justify-center bg-black/10">
@@ -251,17 +251,19 @@ const debounced = debounce(async function fetchanime() {
                   name="category"
                   id="category"
                   v-model="selectedStatus"
-                  class="text-sm outline-none text-center"
+                  class="text-sm outline-none border border-gray-500 mx-2 rounded-full text-center tran"
                   @change="addToWatchlist()"
                 >
-                  <option
-                    :value="category"
-                    v-for="category in status"
-                    :key="category"
-                    class="text-black text-sm"
+                  <TransitionGroup name="fade-slide"
+                    ><option
+                      :value="category"
+                      v-for="category in status"
+                      :key="category"
+                      class="text-black text-sm"
+                    >
+                      {{ category }}
+                    </option></TransitionGroup
                   >
-                    {{ category }}
-                  </option>
                 </select>
               </div>
             </div>

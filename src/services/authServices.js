@@ -55,7 +55,6 @@ export async function getUser() {
     error,
   } = await supabase.auth.getUser()
   if (user) {
-    showToast(`welcome back ${user_email.value}`, 'success')
     return user
   } else if (error) {
     showToast(`Error getting user: ${error.message}`, 'failed')

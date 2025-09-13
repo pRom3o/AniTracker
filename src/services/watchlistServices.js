@@ -129,7 +129,7 @@ export const updatestatus = async (id, status) => {
     .select('*')
 
   if (error) {
-    showToast(`delete error, ${error.message}`, 'error')
+    showToast('deleted', 'error')
   } else {
     showToast('Status updated successfully!', 'success')
 
