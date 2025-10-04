@@ -39,7 +39,7 @@ onMounted(async () => {
         <img :src="banner || animeDetails.poster" alt="anime poster" class="h-full w-full" />
 
         <div
-          class="absolute left-1 top-1/5 lg:hidden flex flex-col justify-center items-center space-y-1 h-[170px] w-full z-20"
+          class="absolute inset-0 left-1 top-1/5 lg:hidden flex flex-col justify-center items-center space-y-1 h-[170px] z-20"
         >
           <img :src="animeDetails.poster" alt="" class="h-full w-[130px]" />
           <p class="text-xl">{{ animeDetails.title_english }}</p>
