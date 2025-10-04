@@ -8,17 +8,17 @@ import { showToast } from './toastServices'
 export const editAvatar = ref(false)
 
 export const watchlistStats = computed(() => {
-  const watched = (watchlist.value || []).filter((item) => item.status === 'Watched').length
-  const watching = (watchlist.value || []).filter((item) => item.status === 'Watching').length
-  const interested = (watchlist.value || []).filter(
+  const Watched = (watchlist.value || []).filter((item) => item.status === 'Watched').length
+  const Watching = (watchlist.value || []).filter((item) => item.status === 'Watching').length
+  const planToWatch = (watchlist.value || []).filter(
     (item) => item.status === 'Interested in',
   ).length
 
   return {
-    watched,
-    watching,
-    interested,
-    total: watched + watching + interested,
+    Watched,
+    'Currently watching': Watching,
+    'Plan to watch': planToWatch,
+    Total: Watched + Watching + planToWatch,
   }
 })
 

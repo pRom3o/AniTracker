@@ -14,9 +14,7 @@ const handleSignUp = async () => {
   showToast('signing up', 'success')
 
   try {
-    const { user, error } = await signUpUser(user_email.value, user_password.value)
-
-    if (error) throw error
+    const { user } = await signUpUser(user_email.value, user_password.value)
 
     if (user) {
       showToast('Signup success', 'success')

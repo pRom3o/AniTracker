@@ -36,10 +36,10 @@ onMounted(async () => {
     <div class="flex flex-col justify-center">
       <div class="md:h-[320px] h-[270px] w-full relative">
         <div class="h-full w-full bg-black/50 inset-0 absolute"></div>
-        <img :src="banner" alt="anime poster" class="h-full w-full" />
+        <img :src="banner || animeDetails.poster" alt="anime poster" class="h-full w-full" />
 
         <div
-          class="absolute left-1 top-1/5 md:hidden flex flex-col justify-center items-center space-y-1 h-[170px] w-full z-20"
+          class="absolute left-1 top-1/5 lg:hidden flex flex-col justify-center items-center space-y-1 h-[170px] w-full z-20"
         >
           <img :src="animeDetails.poster" alt="" class="h-full w-[130px]" />
           <p class="text-xl">{{ animeDetails.title_english }}</p>
@@ -47,7 +47,7 @@ onMounted(async () => {
         </div>
         <div class="w-full">
           <div
-            class="absolute lg:bottom-[30px] lg:left-[25%] md:left-[30%] md:bottom-[30px] hidden md:block"
+            class="absolute lg:bottom-[30px] lg:left-[25%] md:left-[30%] xl:pl-10 md:bottom-[30px] hidden lg:block"
           >
             <p class="text-2xl">{{ animeDetails.title_english }}</p>
             <p>{{ animeDetails.title }}</p>
@@ -55,15 +55,15 @@ onMounted(async () => {
         </div>
       </div>
       <div class="w-full min-h-[300px] flex justify-center">
-        <div class="relative w-[25%] md:flex items-center justify-center hidden">
+        <div class="relative w-[25%] lg:flex items-center justify-center hidden">
           <img
             :src="animeDetails.poster"
             alt="anime poster"
-            class="md:h-[300px] md:w-[200px] h-[200px] w-[150px] absolute md:left-0 lg:left-[27%] md:-top-[70px] hidden md:inline-block rounded-lg"
+            class="md:h-[300px] md:w-[200px] h-[200px] w-[150px] absolute lg:left-0 xl:left-[24%] 2xl:left-[27%] md:-top-[70px] hidden md:inline-block rounded-lg"
           />
         </div>
         <div class="h-full md:w-[80%] w-full flex flex-col">
-          <ul class="flex w-full items-center justify-center md:justify-start">
+          <ul class="lg:ml-10 flex items-center justify-center md:justify-start">
             <li
               class="px-3 py-5 min-w-40 text-center md:text-lg text-sm leading-8"
               @click="isSummary"
@@ -79,11 +79,11 @@ onMounted(async () => {
               Recommendations
             </li>
           </ul>
-          <div class="md:flex w-full p-3 space-x-10" v-show="isShown == false">
+          <div class="xl:pl-10 md:flex w-full p-3 space-x-10" v-show="isShown == false">
             <div class="md:w-[60%] w-full leading-7 px-2">
               <p class="w-full">{{ animeDetails.synopsis }}</p>
             </div>
-            <div class="flex flex-col md:w-[20%]">
+            <div class="flex flex-col lg:w-[20%]">
               <hr class="mb-5 text-white/10" />
               <p id="details">
                 Japanese: <span>{{ animeDetails.title_japanese }}</span>

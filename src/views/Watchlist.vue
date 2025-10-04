@@ -222,7 +222,7 @@ onMounted(() => {
 
         <Transition name="fade-slide" appear
           ><div v-if="interested.length > 0" class="mt-8">
-            <h2 class="font-bold text-2xl md:text-4xl">Interested in</h2>
+            <h2 class="font-bold text-2xl md:text-4xl">Plan to watch</h2>
             <div class="flex items-center justify-center">
               <div class="grid lg:grid-cols-6 md:grid-cols-5 grid-cols-3 gap-2 md:w-[80%] w-full">
                 <div
